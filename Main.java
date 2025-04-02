@@ -3,8 +3,8 @@ public class Main
     public static void main(String[] args)
     {
         //if hosting a game run this code:
-        //hostGame();
-        //joinGame("localhost");
+        hostGame();
+        joinGame("localhost");
 
         
         //if joining a game, run this code with host's IP address:
@@ -32,7 +32,7 @@ public class Main
         {
             public void run()
             {
-                new Client(ipAddress);        
+                new Display(new Client(ipAddress));
             }
         }.start();
     }
