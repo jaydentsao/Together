@@ -42,7 +42,7 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
 
         //Window
         JFrame frame = new JFrame();  //create window
-        frame.setTitle("League of Legends");  //set title of window
+        frame.setTitle("Together");  //set title of window
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  //closing window will exit program
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.getContentPane().add(this);  //add drawing region to window
