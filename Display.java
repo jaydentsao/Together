@@ -91,6 +91,12 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
 
         g.drawImage(grid, mapOffsetX, mapOffsetY, mapWidth, (int)(grid.getHeight(null)*(mapWidth/(double)grid.getWidth(null))), null);
         g.drawImage(lebron, width/2 - 25, height/2 - 25, 50, 50, null);
+
+        // red rectangle on lebron image's border
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(Color.RED);
+        g2d.setStroke(new BasicStroke(3));
+        g2d.drawRect(width/2 - 25, height/2 - 25, 50, 50);
     }
 
     public void run(){
