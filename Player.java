@@ -6,4 +6,8 @@ public class Player {
         this.pos=pos;
         this.order=order;
     }
+
+    public void tick(){
+        
+    }
 }
