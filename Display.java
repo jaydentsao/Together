@@ -12,11 +12,8 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
     private Image grid;
     private int width;
     private int height;
-    private int mapWidth;
-    int moveToX;
-    int moveToY;
-    private int mapOffsetX;
-    private int mapOffsetY;
+    int playerX;
+    int playerY;
     boolean[] directions; //wasd
     boolean jumping;
     int jumpHeight;
@@ -53,10 +50,8 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
         width = size.width;
         height = size.height;
 
-        mapOffsetX = 0;
-        mapOffsetY = 0;
-
-        mapWidth = 5000;
+        playerX = 0;
+        playerY = 0;
 
         directions= new boolean[4];
         jumping = false;
@@ -89,23 +84,23 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
 //        }
         //g.drawImage(lebron, 0, 0, lebronWidth, lebronHeight, null);
 
-        g.drawImage(grid, mapOffsetX, mapOffsetY, mapWidth, (int)(grid.getHeight(null)*(mapWidth/(double)grid.getWidth(null))), null);
-        g.drawImage(lebron, width/2 - 25, height/2 - 25, 50, 50, null);
+        g.drawImage(grid, 0, 0, grid.getWidth(null)*4, grid.getHeight(null)*4, null);
+        g.drawImage(lebron, playerX, playerY, 50, 50, null);
 
         // red rectangle on lebron image's border
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.RED);
         g2d.setStroke(new BasicStroke(3));
-        g2d.drawRect(width/2 - 25, height/2 - 25, 50, 50);
+        g2d.drawRect(playerX, playerY, 50, 50);
     }
 
     public void run(){
         while(true){
             //if(directions[0]) mapOffsetY++;
             if(directions[0] && !jumping) jumping = true;
-            if(directions[1]) mapOffsetX++;
-            if(directions[2]) mapOffsetY--;
-            if(directions[3]) mapOffsetX--;
+            if(directions[1]) playerX--;
+            if(directions[2]) playerY++;
+            if(directions[3]) playerX++;
 
             if(jumping){
                 if(currentJumpHeight == jumpHeight) {
@@ -114,7 +109,7 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
                 }
                 else {
                     currentJumpHeight++;
-                    mapOffsetY++;
+                    playerY--;
                 }
 
             }
