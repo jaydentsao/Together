@@ -29,13 +29,7 @@ public class ServerThread extends Thread
                 String message = in.readLine();
                 System.out.println("ServerThread " + playerNum + " received: " + message);
                 
-                //convert message string into array of tokens (originally separated by spaces)
-                String[] tokens = message.split(" ");
-                
-                if (tokens[0].equals("dip"))
-                    server.sendToOpponent("dip", playerNum);
-                else if (tokens[0].equals("boom"))
-                    server.sendToOpponent("boom", playerNum);
+                server.sendToAll(message, this);
             }
         }
         catch(IOException e)
@@ -47,7 +41,7 @@ public class ServerThread extends Thread
     //send message to this player's client
     public void send(String message)
     {
-        System.out.println("ServerThread " + playerNum + " sending: " + message);
+        System.out.println(message);
         out.println(message);
     }
 }

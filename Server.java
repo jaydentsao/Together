@@ -29,9 +29,10 @@ public class Server
     }
 
     //send message to other player
-    public void sendToAll(String message)
+    public void sendToAll(String message, ServerThread from)
     {
         for (ServerThread thread : threads) {
+            if(from.equals(thread)) continue;
             thread.send(message);
         }
     }
