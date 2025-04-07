@@ -11,14 +11,12 @@ public class Server
         try
         {
             ArrayList<ServerThread> list=new ArrayList<>();
-            while (true){
-                long time=System.currentTimeMillis();
+            for (int i = 0; i < 2; i++) {
             //start listening for connections on port 9000
                 ServerSocket serverSocket = new ServerSocket(9000);
 
                 //create ServerThread for handling connection for player 1
                 list.add(new ServerThread(serverSocket.accept(), this, 1));
-                if(System.currentTimeMillis()-time>10000) break;
             }
             threads=(ServerThread[])((list.toArray()));
         }
