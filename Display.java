@@ -18,6 +18,8 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
     boolean jumping;
     int jumpHeight;
     int currentJumpHeight;
+    int gravity;
+    boolean falling;
     Client client;
 
 
@@ -59,6 +61,9 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
         jumpHeight = 200;
         currentJumpHeight = 0;
 
+        gravity = 0;
+        falling = false;
+
         client = c;
 
         //Keyboard
@@ -97,13 +102,14 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
     public void run(){
         while(true){
             //if(directions[0]) mapOffsetY++;
-            if(directions[0] && !jumping) jumping = true;
+            if(directions[0] && !jumping) jumping = true; // W Pressed & Not Currently Jumping
             if(directions[1]) playerX--;
             if(directions[2]) playerY++;
             if(directions[3]) playerX++;
 
-            if(jumping){
+            if (jumping){
                 if(currentJumpHeight == jumpHeight) {
+                    falling = true;
                     jumping = false;
                     currentJumpHeight = 0;
                 }
@@ -113,33 +119,46 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
                 }
 
             }
+            
+            if (falling) { // gravity
+                if (gravity != jumpHeight) {
+                    playerY++;
+                    gravity++;
+                }
+                else {
+                    falling = false;
+                    gravity = 0;
+                }
+            }
+
             repaint();
             try{Thread.sleep(1);}catch(Exception e){}
         }
-    }
+    }        
 
     public void keyPressed(KeyEvent e)
     {
         //System.out.println(e.getKeyCode());
-        if(e.getKeyCode() == 87)
-            directions[0] = true;
-        if(e.getKeyCode() == 65)
+        if(e.getKeyCode() == 87) // W -> Up
+            directions[0] = true; 
+        if(e.getKeyCode() == 65) // A -> Left
             directions[1] = true;
-        if(e.getKeyCode() == 83)
+        if(e.getKeyCode() == 83) // S -> Down
             directions[2] = true;
-        if(e.getKeyCode() == 68)
+        if(e.getKeyCode() == 68) // D -> Right
             directions[3] = true;
+            
         client.actionPerformed(String.valueOf(e.getKeyCode()));
     }
 
     public void keyReleased(KeyEvent e) {
-        if(e.getKeyCode() == 87)
+        if(e.getKeyCode() == 87) // W -> Up
             directions[0] = false;
-        if(e.getKeyCode() == 65)
+        if(e.getKeyCode() == 65) // A -> Left
             directions[1] = false;
-        if(e.getKeyCode() == 83)
+        if(e.getKeyCode() == 83) // S -> Down
             directions[2] = false;
-        if(e.getKeyCode() == 68)
+        if(e.getKeyCode() == 68) // D -> Right
             directions[3] = false;
     }
 
