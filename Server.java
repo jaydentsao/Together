@@ -10,15 +10,15 @@ public class Server
     {
         try
         {
-            ArrayList<ServerThread> list=new ArrayList<>();
-            for (int i = 0; i < 2; i++) {
+            threads= new ServerThread[2];
+            ServerSocket serverSocket = new ServerSocket(9000);
+            for (int i = 1; i < 3; i++) {
             //start listening for connections on port 9000
-                ServerSocket serverSocket = new ServerSocket(9000);
+                Socket socket = serverSocket.accept();
 
                 //create ServerThread for handling connection for player 1
-                list.add(new ServerThread(serverSocket.accept(), this, 1));
+                threads[i-1]=(new ServerThread(socket, this, i));
             }
-            threads=(ServerThread[])((list.toArray()));
         }
         catch(IOException e)
         {

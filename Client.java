@@ -14,34 +14,11 @@ public class Client extends Thread
     private JButton boomButton;
     private Display display;
 
-    public Client(String ipAddress)
+    public Client(String ipAddress, Display d)
     {
         try
         {
-//            frame = new JFrame("Dip Dip Boom");
-//            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//
-//            frame.getContentPane().setLayout(new GridLayout(1, 2));
-//
-//            Font font = new Font(null, Font.PLAIN, 72);
-//
-//            dipButton = new JButton("Dip");
-//            dipButton.setFont(font);
-//            dipButton.setEnabled(false);
-//            dipButton.setActionCommand("dip");
-//            dipButton.addActionListener(this);
-//            frame.getContentPane().add(dipButton);
-//
-//            boomButton = new JButton("Boom");
-//            boomButton.setFont(font);
-//            boomButton.setEnabled(false);
-//            boomButton.setActionCommand("boom");
-//            boomButton.addActionListener(this);
-//            frame.getContentPane().add(boomButton);
-//
-//            frame.pack();
-
-            //display = new Display();
+            display = d;
 
             //connect to server running on port 9000 of given ipAddress
             Socket socket = new Socket(ipAddress, 9000);
@@ -66,26 +43,15 @@ public class Client extends Thread
             while (true)
             {
                 String message = in.readLine();
-                System.out.println("Client received: " + message);
+                System.out.println("Client " + hashCode() + " received: " + message);
 
                 //convert message string into array of tokens (originally separated by spaces)
                 String[] tokens = message.split(" ");
 
-                if (tokens[0].equals("go"))
+                if (tokens[0].equals("pos"))
                 {
-                    dipButton.setEnabled(true);
-                    boomButton.setEnabled(true);
-                }
-                else if (tokens[0].equals("dip"))
-                {
-                    JOptionPane.showMessageDialog(frame, "Opponent played \"dip\"");
-                    dipButton.setEnabled(true);
-                    boomButton.setEnabled(true);
-                }
-                else if (tokens[0].equals("boom"))
-                {
-                    JOptionPane.showMessageDialog(frame, "Opponent won by playing \"boom\"");
-                    System.exit(0);
+                    display.updatePosition(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
+                    System.out.println(Integer.parseInt(tokens[1]) + " " + Integer.parseInt(tokens[2]));
                 }
             }
         }
@@ -96,33 +62,10 @@ public class Client extends Thread
     }
 
     //send message to server
-    private void send(String message)
+    public void send(String message)
     {
         System.out.println("Client sending: " + message);
         out.println(message);
     }
 
-    public void actionPerformed(String e){
-        send(e);
-    }
-
-    //called when button is pressed
-//    public void actionPerformed(ActionEvent e)
-//    {
-//        String command = e.getActionCommand();
-//        if (command.equals("dip"))
-//        {
-//            dipButton.setEnabled(false);
-//            boomButton.setEnabled(false);
-//            send("dip");
-//        }
-//        else if (command.equals("boom"))
-//        {
-//            dipButton.setEnabled(false);
-//            boomButton.setEnabled(false);
-//            send("boom");
-//            JOptionPane.showMessageDialog(frame, "You won by playing \"boom\"");
-//            System.exit(0);
-//        }
-//    }
 }

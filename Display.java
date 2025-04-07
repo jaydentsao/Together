@@ -14,6 +14,8 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
     private int height;
     int playerX;
     int playerY;
+    int player2X;
+    int player2Y;
     boolean[] directions; //wasd
     boolean jumping;
     int jumpHeight;
@@ -23,7 +25,7 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
     Client client;
 
 
-    public Display(Client c)
+    public Display(String ip)
     {
         String lebronName = "lebron.jpg";
         URL url1 = getClass().getResource(lebronName);
@@ -55,6 +57,9 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
         playerX = 0;
         playerY = 0;
 
+        player2X = 0;
+        player2Y = 0;
+
         directions= new boolean[4];
         jumping = false;
 
@@ -64,7 +69,7 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
         gravity = 0;
         falling = false;
 
-        client = c;
+        client = new Client(ip, this);
 
         //Keyboard
         setFocusable(true);  //indicates that Display can process key presses
@@ -91,12 +96,15 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
 
         g.drawImage(grid, 0, 0, grid.getWidth(null)*4, grid.getHeight(null)*4, null);
         g.drawImage(lebron, playerX, playerY, 50, 50, null);
+        g.drawImage(lebron, player2X, player2Y, 50, 50, null);
 
         // red rectangle on lebron image's border
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.RED);
         g2d.setStroke(new BasicStroke(3));
         g2d.drawRect(playerX, playerY, 50, 50);
+        g2d.setColor(Color.GREEN);
+        g2d.drawRect(player2X, player2Y, 50, 50);
     }
 
     public void run(){
@@ -132,9 +140,15 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
             }
 
             repaint();
+            client.send("pos " + playerX + " " + playerY);
             try{Thread.sleep(1);}catch(Exception e){}
         }
-    }        
+    }
+
+    public void updatePosition(int x, int y){
+        player2X = x;
+        player2Y = y;
+    }
 
     public void keyPressed(KeyEvent e)
     {
@@ -147,8 +161,6 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
             directions[2] = true;
         if(e.getKeyCode() == 68) // D -> Right
             directions[3] = true;
-            
-        client.actionPerformed(String.valueOf(e.getKeyCode()));
     }
 
     public void keyReleased(KeyEvent e) {
