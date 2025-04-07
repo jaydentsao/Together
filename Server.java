@@ -16,7 +16,7 @@ public class Server
                 ServerSocket serverSocket = new ServerSocket(9000);
 
                 //create ServerThread for handling connection for player 1
-                list.add(new ServerThread(serverSocket.accept(), this, 1));
+                list.add(new ServerThread(serverSocket.accept(), this, i));
             }
             threads=(ServerThread[])((list.toArray()));
         }
