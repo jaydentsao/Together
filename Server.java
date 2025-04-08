@@ -19,6 +19,8 @@ public class Server
                 //create ServerThread for handling connection for player 1
                 threads[i]=(new ServerThread(socket, this, i+1));
             }
+            sendToAll("go", threads[0]);
+            sendToAll("go", threads[1]);
         }
         catch(IOException e)
         {
@@ -30,8 +32,7 @@ public class Server
     public void sendToAll(String message, ServerThread from)
     {
         for (ServerThread thread : threads) {
-            if(from.equals(thread)) continue;
-            thread.send(message);
+            if(!from.equals(thread)) thread.send(message);
         }
     }
 }

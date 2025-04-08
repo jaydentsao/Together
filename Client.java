@@ -53,6 +53,9 @@ public class Client extends Thread
                     display.updatePosition(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
                     System.out.println(Integer.parseInt(tokens[1]) + " " + Integer.parseInt(tokens[2]));
                 }
+                if(tokens[0].equals("go")){
+                    display.startGame();
+                }
             }
         }
         catch(IOException e)

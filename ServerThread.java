@@ -30,6 +30,7 @@ public class ServerThread extends Thread
                 System.out.println("ServerThread " + playerNum + " received: " + message);
                 
                 server.sendToAll(message, this);
+//                send(message);
             }
         }
         catch(IOException e)
@@ -41,7 +42,7 @@ public class ServerThread extends Thread
     //send message to this player's client
     public void send(String message)
     {
-        System.out.println(message);
+        System.out.println(message + " " + playerNum);
         out.println(message);
     }
 }

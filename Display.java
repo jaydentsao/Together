@@ -23,6 +23,7 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
     int gravity;
     boolean falling;
     Client client;
+    boolean start;
 
 
     public Display(String ip)
@@ -62,6 +63,7 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
 
         directions= new boolean[4];
         jumping = false;
+        start = false;
 
         jumpHeight = 200;
         currentJumpHeight = 0;
@@ -108,46 +110,55 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
     }
 
     public void run(){
-        while(true){
-            //if(directions[0]) mapOffsetY++;
-            if(directions[0] && !jumping) jumping = true; // W Pressed & Not Currently Jumping
-            if(directions[1]) playerX--;
-            if(directions[2]) playerY++;
-            if(directions[3]) playerX++;
+        while(true) {
+            System.out.println(start);
+            if (start) {
+                //if(directions[0]) mapOffsetY++;
+                if (directions[0] && !jumping) jumping = true; // W Pressed & Not Currently Jumping
+                if (directions[1]) playerX--;
+                if (directions[2]) playerY++;
+                if (directions[3]) playerX++;
 
-            if (jumping){
-                if(currentJumpHeight == jumpHeight) {
-                    falling = true;
-                    jumping = false;
-                    currentJumpHeight = 0;
-                }
-                else {
-                    currentJumpHeight++;
-                    playerY--;
+                if (jumping) {
+                    if (currentJumpHeight == jumpHeight) {
+                        falling = true;
+                        jumping = false;
+                        currentJumpHeight = 0;
+                    } else {
+                        currentJumpHeight++;
+                        playerY--;
+                    }
+
                 }
 
+                if (falling) { // gravity
+                    if (gravity != jumpHeight) {
+                        playerY++;
+                        gravity++;
+                    } else {
+                        falling = false;
+                        gravity = 0;
+                    }
+                }
+
+                repaint();
+                client.send("pos " + playerX + " " + playerY);
+                try {
+                    Thread.sleep(1);
+                } catch (Exception e) {
+                }
             }
-            
-            if (falling) { // gravity
-                if (gravity != jumpHeight) {
-                    playerY++;
-                    gravity++;
-                }
-                else {
-                    falling = false;
-                    gravity = 0;
-                }
-            }
-
-            repaint();
-            client.send("pos " + playerX + " " + playerY);
-            try{Thread.sleep(1);}catch(Exception e){}
         }
     }
 
     public void updatePosition(int x, int y){
         player2X = x;
         player2Y = y;
+    }
+
+    public void startGame(){
+        start = true;
+        System.out.println("starting");
     }
 
     public void keyPressed(KeyEvent e)
