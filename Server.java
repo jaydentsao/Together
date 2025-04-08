@@ -6,13 +6,13 @@ public class Server
 {
     private ServerThread[] threads;
 
-    public Server()
+    public Server(int numPlayers)
     {
         try
         {
-            threads= new ServerThread[2];
+            threads= new ServerThread[numPlayers];
             ServerSocket serverSocket = new ServerSocket(9000);
-            for (int i = 1; i < 3; i++) {
+            for (int i = 1; i < numPlayers+1; i++) {
             //start listening for connections on port 9000
                 Socket socket = serverSocket.accept();
 

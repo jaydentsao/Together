@@ -5,21 +5,19 @@ public class Main
         //if hosting a game run this code:
         hostGame();
         joinGame("localhost");
-        joinGame("localhost");
-
         
         //if joining a game, run this code with host's IP address:
-        //joinGame("127.0.0.1");
+        //joinGame("10.13.30.36");
     }
 
-    public static void hostGame()
+    public static void hostGame(int numPlayers)
     {
         //start server in new thread
         new Thread()
         {
             public void run()
             {
-                new Server();
+                new Server(numPlayers);
             }
         }.start();
 
