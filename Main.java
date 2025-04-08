@@ -3,23 +3,25 @@ public class Main
     public static void main(String[] args)
     {
         //if hosting a game run this code:
-        hostGame();
+        hostGame(2);
         joinGame("localhost");
-        joinGame("localhost");
+//        joinGame("localhost");
+//        joinGame("localhost");
+//        joinGame("10.13.30.40");
 
         
         //if joining a game, run this code with host's IP address:
         //joinGame("127.0.0.1");
     }
 
-    public static void hostGame()
+    public static void hostGame(int numPlayers)
     {
         //start server in new thread
         new Thread()
         {
             public void run()
             {
-                new Server();
+                new Server(numPlayers);
             }
         }.start();
 
