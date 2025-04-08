@@ -43,7 +43,7 @@ public class Client extends Thread
             while (true)
             {
                 String message = in.readLine();
-                System.out.println("Client " + hashCode() + " received: " + message);
+                //System.out.println("Client " + hashCode() + " received: " + message);
 
                 //convert message string into array of tokens (originally separated by spaces)
                 String[] tokens = message.split(" ");
@@ -67,7 +67,7 @@ public class Client extends Thread
     //send message to server
     public void send(String message)
     {
-        System.out.println("Client sending: " + message);
+        //System.out.println("Client sending: " + message);
         out.println(message);
     }
 
