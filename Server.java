@@ -12,12 +12,12 @@ public class Server
         {
             threads= new ServerThread[numPlayers];
             ServerSocket serverSocket = new ServerSocket(9000);
-            for (int i = 1; i < numPlayers+1; i++) {
+            for (int i = 0; i < numPlayers; i++) {
             //start listening for connections on port 9000
                 Socket socket = serverSocket.accept();
 
                 //create ServerThread for handling connection for player 1
-                threads[i-1]=(new ServerThread(socket, this, i));
+                threads[i]=(new ServerThread(socket, this, i+1));
             }
         }
         catch(IOException e)
