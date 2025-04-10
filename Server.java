@@ -5,9 +5,11 @@ import java.util.*;
 public class Server
 {
     private ServerThread[] threads;
+    private int numPlayers;
 
     public Server(int numPlayers)
     {
+        this.numPlayers = numPlayers;
         try
         {
             threads= new ServerThread[numPlayers];
@@ -17,10 +19,11 @@ public class Server
                 Socket socket = serverSocket.accept();
 
                 //create ServerThread for handling connection for player 1
-                threads[i]=(new ServerThread(socket, this, i+1));
+                threads[i]= new ServerThread(socket, this, i+1);
             }
-            sendToAll("go", threads[0]);
-            sendToAll("go", threads[1]);
+            for (int i = 0; i < numPlayers; i++) {
+                threads[i].send("go");
+            }
         }
         catch(IOException e)
         {
@@ -31,8 +34,8 @@ public class Server
     //send message to other player
     public void sendToAll(String message, ServerThread from)
     {
-        for (ServerThread thread : threads) {
-            if(!from.equals(thread)) thread.send(message);
+        for (int i = 0; i < numPlayers; i++) {
+            if(!from.equals(threads[i])) threads[i].send(message);
         }
     }
 }

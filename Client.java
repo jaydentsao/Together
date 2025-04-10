@@ -47,13 +47,13 @@ public class Client extends Thread
 
                 //convert message string into array of tokens (originally separated by spaces)
                 String[] tokens = message.split(" ");
-
                 if (tokens[0].equals("pos"))
                 {
                     display.updatePosition(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
-                    System.out.println(Integer.parseInt(tokens[1]) + " " + Integer.parseInt(tokens[2]));
+                    //System.out.println(Integer.parseInt(tokens[1]) + " " + Integer.parseInt(tokens[2]));
                 }
                 if(tokens[0].equals("go")){
+
                     display.startGame();
                 }
             }

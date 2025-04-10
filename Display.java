@@ -111,9 +111,13 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
 
     public void run(){
         while(true) {
-            System.out.println(start);
-            if (start) {
+            if(!start){
+                try {
+                    Thread.sleep(1);
+                } catch (Exception e) {}
+            } else {
                 //if(directions[0]) mapOffsetY++;
+                System.out.println(directions[0] + " " + directions[1] + " " + directions[2] + " " + directions[3]);
                 if (directions[0] && !jumping) jumping = true; // W Pressed & Not Currently Jumping
                 if (directions[1]) playerX--;
                 if (directions[2]) playerY++;
