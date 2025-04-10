@@ -5,7 +5,7 @@ public class Main
         //if hosting a game run this code:
         hostGame(2);
         joinGame("localhost");
-        joinGame("localhost");
+//        joinGame("localhost");
 //        joinGame("localhost");
 //        joinGame("localhost");
 //        joinGame("localhost");
