@@ -71,7 +71,7 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
         gravity = 0;
         falling = false;
 
-        client = new Client(ip, this);
+
 
         //Keyboard
         setFocusable(true);  //indicates that Display can process key presses
@@ -79,6 +79,7 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
 
         //Mouse
         addMouseListener(this);  //will notify Display when the mouse is pressed
+        client = new Client(ip, this);
         run();
     }
 
