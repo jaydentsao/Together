@@ -49,12 +49,11 @@ public class Client extends Thread
                 String[] tokens = message.split(" ");
                 if (tokens[0].equals("pos"))
                 {
-                    display.updatePosition(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
+                    display.updatePosition(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), Integer.parseInt(tokens[3]));
                     //System.out.println(Integer.parseInt(tokens[1]) + " " + Integer.parseInt(tokens[2]));
                 }
                 if(tokens[0].equals("go")){
-
-                    display.startGame();
+                    display.startGame(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
                 }
             }
         }
