@@ -164,7 +164,7 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
     public void keyPressed(KeyEvent e)
     {
         //System.out.println(e.getKeyCode());
-        if(e.getKeyCode() == 87) // W -> Up
+        if(e.getKeyCode() == 87 && !falling) // W -> Up
             directions[0] = true; 
         if(e.getKeyCode() == 65) // A -> Left
             directions[1] = true;
