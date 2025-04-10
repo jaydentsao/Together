@@ -3,7 +3,7 @@ import java.net.*;
 
 public class ServerThread extends Thread
 {
-    private int playerNum;
+    int playerNum;
     private BufferedReader in;  //for receiving messages from this player's client
     private PrintWriter out;  //for sending messages to this player's client
     private Server server;  //for sending messages to opponent
