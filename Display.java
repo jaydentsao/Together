@@ -211,6 +211,9 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
         numPlayers = players;
         this.playerNum = playerNum;
         playerXs = new int[numPlayers];
+        for (int i = 0; i < playerXs.length; i++) {
+            playerXs[i]=i*playerWidth;
+        }
         playerYs = new int[numPlayers];
         System.out.println("starting");
     }
