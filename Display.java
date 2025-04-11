@@ -169,24 +169,37 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
                 // Collisions
                 for (int i = 0; i < numPlayers; i++) {
                     if (i != playerNum-1) {
-                        // Right Border
-                        if (playerXs[playerNum-1] + playerWidth == playerXs[i]) {
-                            directions[3] = false;
-                            allowMove[3] = false;
-                        }
                         // Left Border
-                        if (playerXs[playerNum-1] == playerXs[i] + playerWidth) {
+                        if (playerXs[playerNum-1] == playerXs[i] + playerWidth && Math.abs(playerYs[playerNum-1] - playerYs[i]) < playerHeight) {
                             directions[1] = false;
                             allowMove[1] = false;
                         }
-                        // Top & Bottom Border
-                        if (playerYs[playerNum-1] == playerYs[i] + playerHeight) {
+                        // Right Border
+                        if (playerXs[playerNum-1] + playerWidth == playerXs[i] && Math.abs(playerYs[playerNum-1] - playerYs[i]) < playerHeight) {
+                            directions[3] = false;
+                            allowMove[3] = false;
+                        }
+                        // Top Border
+                        if (playerYs[playerNum-1] == playerYs[i] + playerHeight && Math.abs(playerXs[playerNum-1] - playerXs[i]) < playerWidth) {
                             directions[0] = false;
                             allowMove[0] = false;
                         }
-                        if (playerYs[playerNum-1] + playerHeight == playerYs[i]) {
+                        // Bottom Border
+                        if (playerYs[playerNum-1] + playerHeight == playerYs[i] && Math.abs(playerXs[playerNum-1] - playerXs[i]) < playerWidth) {
                             directions[2] = false;
                             allowMove[2] = false;
+                        }
+
+                        // Reallow Movement
+                        // Right & Left
+                        if (playerXs[playerNum-1] + playerWidth < playerXs[i] || playerXs[playerNum-1] > playerXs[i] + playerWidth) {
+                            allowMove[3] = true;
+                            allowMove[1] = true;
+                        }
+                        // Up & Down
+                        if (playerYs[playerNum-1] + playerHeight < playerYs[i] || playerYs[playerNum-1] > playerYs[i] + playerHeight) {
+                            allowMove[0] = true;
+                            allowMove[2] = true;
                         }
                     }
                 }
