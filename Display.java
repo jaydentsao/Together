@@ -165,7 +165,7 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
                         gravity = 0;
                     }
                 }
-
+                allowMove=new boolean[]{true,true,true,true};
                 // Collisions
                 for (int i = 0; i < numPlayers; i++) {
                     if (i != playerNum-1) {
@@ -188,18 +188,6 @@ public class Display extends JComponent implements KeyListener,  MouseListener {
                         if (playerYs[playerNum-1] + playerHeight == playerYs[i] && Math.abs(playerXs[playerNum-1] - playerXs[i]) < playerWidth) {
                             directions[2] = false;
                             allowMove[2] = false;
-                        }
-
-                        // Reallow Movement
-                        // Right & Left
-                        if (playerXs[playerNum-1] + playerWidth < playerXs[i] || playerXs[playerNum-1] > playerXs[i] + playerWidth) {
-                            allowMove[3] = true;
-                            allowMove[1] = true;
-                        }
-                        // Up & Down
-                        if (playerYs[playerNum-1] + playerHeight < playerYs[i] || playerYs[playerNum-1] > playerYs[i] + playerHeight) {
-                            allowMove[0] = true;
-                            allowMove[2] = true;
                         }
                     }
                 }
