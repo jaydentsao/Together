@@ -10,8 +10,6 @@ public class Client extends Thread
     private BufferedReader in; //for receiving messages from the server
     private PrintWriter out; //for sending messages to the server
     private JFrame frame;
-    private JButton dipButton;
-    private JButton boomButton;
     private Display display;
 
     public Client(String ipAddress, Display d)
