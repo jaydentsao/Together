@@ -27,7 +27,7 @@ public class ServerThread extends Thread
             while (true)
             {
                 String message = in.readLine();
-                System.out.println("ServerThread " + playerNum + " received: " + message);
+//                System.out.println("ServerThread " + playerNum + " received: " + message);
                 
                 server.sendToAll(message, this);
 //                send(message);
@@ -42,7 +42,7 @@ public class ServerThread extends Thread
     //send message to this player's client
     public void send(String message)
     {
-        System.out.println(message + " " + playerNum);
+//        System.out.println(message + " " + playerNum);
         out.println(message);
     }
 }

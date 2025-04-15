@@ -22,7 +22,7 @@ public class Server
                 threads[i]= new ServerThread(socket, this, i+1);
             }
             for (int i = 0; i < numPlayers; i++) {
-                threads[i].send("go " + numPlayers + " " + threads[i].playerNum);
+                threads[i].send("ready " + numPlayers + " " + threads[i].playerNum);
             }
         }
         catch(IOException e)
