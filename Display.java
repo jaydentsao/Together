@@ -72,10 +72,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         // int player2Y;
 
         directions = new boolean[4];
-<<<<<<< HEAD
-=======
         allowMove = new boolean[] { true, true, true, true };
->>>>>>> ba183531578f5228962cd8966ab0af42502ad249
 
         jumping = false;
         start = false;
@@ -172,14 +169,8 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                         gravity = 0;
                     }
                 }
-<<<<<<< HEAD
-
-                // Collisions
-                allowMove = new boolean[] {true, true, true, true};
-=======
                 allowMove = new boolean[] { true, true, true, true };
                 // Player-Player Collisions
->>>>>>> ba183531578f5228962cd8966ab0af42502ad249
                 for (int i = 0; i < numPlayers; i++) {
                     if (i != playerNum - 1) {
                         // Left Border
