@@ -110,7 +110,11 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     }
 
     public void paintComponent(Graphics g) {
-        g.drawImage(grid, 0, 0, grid.getWidth(null) * 4, grid.getHeight(null) * 4, null);
+        if(start)
+            g.drawImage(grid, players.get(playerNum-1).getX()*-1, (players.get(playerNum-1)).getY()*-1, grid.getWidth(null) * 4, grid.getHeight(null) * 4, null);
+        else
+            g.drawImage(grid, 0, 0, grid.getWidth(null) * 4, grid.getHeight(null) * 4, null);
+
         if (start) {
             for(int i = 0; i < numPlayers; ++i) {
                 Graphics2D g2d = (Graphics2D)g;
@@ -145,21 +149,14 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 } catch (Exception e) {
                 }
             } else {
-                if (directions[0] && !jumping) {
+                if (directions[0] && !jumping)
                     jumping = true;
-                }
-
-                if (directions[1]) {
+                if (directions[1])
                     (players.get(playerNum - 1)).setX((players.get(playerNum - 1)).getX() - 1);
-                }
-
-                if (directions[2]) {
+                if (directions[2])
                     (players.get(playerNum - 1)).setY((players.get(playerNum - 1)).getY() + 1);
-                }
-
-                if (directions[3]) {
+                if (directions[3])
                     (players.get(playerNum - 1)).setX((players.get(playerNum - 1)).getX() + 1);
-                }
 
                 if (jumping) {
                     if (currentJumpHeight == jumpHeight) {
@@ -168,15 +165,14 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                         currentJumpHeight = 0;
                     } else {
                         currentJumpHeight++;
-                        playerYs[playerNum - 1]--;
+                        players.get(playerNum - 1).setY(players.get(playerNum - 1).getY()-1);
                     }
-
                 }
 
                 // Gravity
                 if (falling && allowMove[2]) {
                     if (gravity != jumpHeight) {
-                        playerYs[playerNum - 1]++;
+                        players.get(playerNum - 1).setY(players.get(playerNum - 1).getY()+1);
                         gravity++;
                     }
                     else {
@@ -269,7 +265,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         this.playerNum = playerNum;
 
         for(int i = 0; i < numPlayers; ++i) {
-            int[] playerPosition = new int[]{0, i*playerWidth};
+            int[] playerPosition = new int[]{i*(playerWidth+5), 0};
             players.add(new Player(playerPosition, i + 1, 0));
         }
 
