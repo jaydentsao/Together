@@ -16,11 +16,18 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     private int width;
     private int height;
 
+    LinkedList<Obstacle> obstacles;
     ArrayList<Player> players;
-    boolean[] directions;
+    int playerWidth;
+    int playerHeight;
+
+    boolean[] directions; // wasd
+    boolean[] allowMove;
+
     boolean jumping;
     int jumpHeight;
     int currentJumpHeight;
+
     int gravity;
     boolean falling;
 
@@ -58,6 +65,8 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             colorsImages[i] = new ImageIcon(url3).getImage();
         }
 
+        obstacles = new LinkedList<>();
+
         frame = new JFrame(); // create window
         frame.setTitle("Together"); // set title of window
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // closing window will exit program
@@ -70,13 +79,19 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         width = size.width;
         height = size.height;
 
+        playerWidth = 50;
+        playerHeight = 50;
+
+
         directions = new boolean[4];
+        allowMove = new boolean[] { true, true, true, true };
 
         jumping = false;
         start = false;
         ready = false;
         jumpHeight = 200;
         currentJumpHeight = 0;
+
         gravity = 0;
         falling = false;
         color = 0;
@@ -92,8 +107,6 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         addMouseListener(this); // will notify Display when the mouse is pressed
         client = new Client(ip, this);
         run();
-
-
     }
 
     public void paintComponent(Graphics g) {
@@ -112,6 +125,13 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             g.drawImage(colorsImages[color], (int)((double)(width / 2) - colorWidth / (double)2.0F), (int)((double)(height / 2) - colorHeight / (double)2.0F), (int)colorWidth, (int)colorHeight, null);
         }
 
+        // red rectangle on lebron image's border
+        // Graphics2D g2d = (Graphics2D) g;
+        // g2d.setColor(Color.RED);
+        // g2d.setStroke(new BasicStroke(3));
+        // g2d.drawRect(playerX, playerY, 50, 50);
+        // g2d.setColor(Color.GREEN);
+        // g2d.drawRect(player2X, player2Y, 50, 50);
     }
 
     public void run() {
@@ -121,8 +141,8 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             height = size.height;
             if (!start) {
                 try {
-                    Thread.sleep(1L);
-                } catch (Exception var3) {
+                    Thread.sleep(1);
+                } catch (Exception e) {
                 }
             } else {
                 if (directions[0] && !jumping) {
@@ -150,15 +170,75 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                         ++currentJumpHeight;
                         (players.get(playerNum - 1)).setY((players.get(playerNum - 1)).getY() - 1);
                     }
+
                 }
 
+                // Gravity
                 if (falling) {
                     if (gravity != jumpHeight) {
                         (players.get(playerNum - 1)).setY((players.get(playerNum - 1)).getY() + 1);
-                        ++gravity;
+                        gravity++;
                     } else {
                         falling = false;
                         gravity = 0;
+                    }
+                }
+                allowMove = new boolean[] { true, true, true, true };
+                // Player-Player Collisions
+                for (int i = 0; i < numPlayers; i++) {
+                    if (i != playerNum - 1) {
+                        // Left Border
+                        if (playerXs[playerNum - 1] == playerXs[i] + playerWidth
+                                && Math.abs(playerYs[playerNum - 1] - playerYs[i]) < playerHeight) {
+                            directions[1] = false;
+                            allowMove[1] = false;
+                        }
+                        // Right Border
+                        if (playerXs[playerNum - 1] + playerWidth == playerXs[i]
+                                && Math.abs(playerYs[playerNum - 1] - playerYs[i]) < playerHeight) {
+                            directions[3] = false;
+                            allowMove[3] = false;
+                        }
+                        // Top Border
+                        if (playerYs[playerNum - 1] == playerYs[i] + playerHeight
+                                && Math.abs(playerXs[playerNum - 1] - playerXs[i]) < playerWidth) {
+                            directions[0] = false;
+                            allowMove[0] = false;
+                        }
+                        // Bottom Border
+                        if (playerYs[playerNum - 1] + playerHeight == playerYs[i]
+                                && Math.abs(playerXs[playerNum - 1] - playerXs[i]) < playerWidth) {
+                            directions[2] = false;
+                            allowMove[2] = false;
+                        }
+                    }
+                }
+                // Player-Obstacle Collisions
+                for (Obstacle obstacle : obstacles) {
+                    int[] coords=obstacle.getCoords();
+                    // Left Border
+                    if (playerXs[playerNum - 1] == coords[2]
+                            && (playerYs[playerNum - 1]+playerHeight<coords[1] || playerYs[playerNum - 1]-playerHeight>coords[3])){
+                        directions[1] = false;
+                        allowMove[1] = false;
+                    }
+                    // Right Border
+                    if (playerXs[playerNum - 1] + playerWidth == coords[0]
+                            && (playerYs[playerNum - 1]+playerHeight<coords[1] || playerYs[playerNum - 1]-playerHeight>coords[3])) {
+                        directions[3] = false;
+                        allowMove[3] = false;
+                    }
+                    // Top Border
+                    if (playerYs[playerNum - 1] == coords[3]
+                            && (playerXs[playerNum - 1]+playerWidth<coords[0] || playerXs[playerNum - 1]-playerWidth>coords[2])) {
+                        directions[0] = false;
+                        allowMove[0] = false;
+                    }
+                    // Bottom Border
+                    if (playerYs[playerNum - 1] + playerHeight == coords[1]
+                            && (playerXs[playerNum - 1]+playerWidth<coords[0] || playerXs[playerNum - 1]-playerWidth>coords[2])) {
+                        directions[2] = false;
+                        allowMove[2] = false;
                     }
                 }
 
@@ -166,8 +246,8 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 client.send("pos " + (players.get(playerNum - 1)).getX() + " " + (players.get(playerNum - 1)).getY() + " " + playerNum);
 
                 try {
-                    Thread.sleep(1L);
-                } catch (Exception var4) {
+                    Thread.sleep(1);
+                } catch (Exception e) {
                 }
             }
         }
@@ -200,21 +280,16 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     }
 
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == 87 && !falling) {
+        // System.out.println(e.getKeyCode());
+        if (e.getKeyCode() == 87 && !falling && allowMove[0]) // W -> Up
             directions[0] = true;
-        }
-
-        if (e.getKeyCode() == 65) {
+        if (e.getKeyCode() == 65 && allowMove[1]) // A -> Left
             directions[1] = true;
-        }
-
-        if (e.getKeyCode() == 83) {
+        if (e.getKeyCode() == 83 && allowMove[2]) // S -> Down
             directions[2] = true;
-        }
-
-        if (e.getKeyCode() == 68) {
+        if (e.getKeyCode() == 68 && allowMove[3]) // D -> Right
             directions[3] = true;
-        }
+    }
 
         if (ready && e.getKeyCode() == 32) {
             HashSet<Integer> colorSet = new HashSet();
@@ -258,22 +333,14 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     }
 
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == 87) {
+        if (e.getKeyCode() == 87) // W -> Up
             directions[0] = false;
-        }
-
-        if (e.getKeyCode() == 65) {
+        if (e.getKeyCode() == 65) // A -> Left
             directions[1] = false;
-        }
-
-        if (e.getKeyCode() == 83) {
+        if (e.getKeyCode() == 83) // S -> Down
             directions[2] = false;
-        }
-
-        if (e.getKeyCode() == 68) {
+        if (e.getKeyCode() == 68) // D -> Right
             directions[3] = false;
-        }
-
     }
 
     public void mouseClicked(MouseEvent e) {
