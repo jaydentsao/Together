@@ -66,6 +66,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         }
 
         obstacles = new LinkedList<>();
+        obstacles.add(new Obstacle(0, 400, 700, 500, true));
 
         frame = new JFrame(); // create window
         frame.setTitle("Together"); // set title of window
