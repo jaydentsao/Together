@@ -301,7 +301,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             }
         }
 
-        if (!start) {
+        if (!start && ready) {
             if (e.getKeyCode() == 39) {
                 if (color == 9) {
                     color = 0;
