@@ -1,71 +1,63 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.net.*;
-import javax.swing.*;
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
 
-public class Client extends Thread
-//        implements ActionListener
-{
-    private BufferedReader in; //for receiving messages from the server
-    private PrintWriter out; //for sending messages to the server
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+
+public class Client extends Thread {
+    private BufferedReader in;
+    private PrintWriter out;
     private JFrame frame;
+    private JButton dipButton;
+    private JButton boomButton;
     private Display display;
 
-    public Client(String ipAddress, Display d)
-    {
-        try
-        {
-            display = d;
-
-            //connect to server running on port 9000 of given ipAddress
+    public Client(String ipAddress, Display d) {
+        try {
+            this.display = d;
             Socket socket = new Socket(ipAddress, 9000);
-
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out = new PrintWriter(socket.getOutputStream(), true);
-
-            start();
-            //the run method has started
-        }
-        catch(IOException e)
-        {
+            this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            this.out = new PrintWriter(socket.getOutputStream(), true);
+            this.start();
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    //keep receiving messages from server
-    public void run()
-    {
-        try
-        {
-            while (true)
-            {
-                String message = in.readLine();
-                //System.out.println("Client " + hashCode() + " received: " + message);
-
-                //convert message string into array of tokens (originally separated by spaces)
+    public void run() {
+        try {
+            while(true) {
+                String message = this.in.readLine();
                 String[] tokens = message.split(" ");
-                if (tokens[0].equals("pos"))
-                {
-                    display.updatePosition(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), Integer.parseInt(tokens[3]));
-                    //System.out.println(Integer.parseInt(tokens[1]) + " " + Integer.parseInt(tokens[2]));
+                if (tokens[0].equals("pos")) {
+                    this.display.updatePosition(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), Integer.parseInt(tokens[3]));
                 }
-                if(tokens[0].equals("go")){
-                    display.startGame(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
+
+                if (tokens[0].equals("ready")) {
+                    this.display.readyGame(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
+                }
+
+                if (tokens[0].equals("color")) {
+                    this.display.updateColor(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
+                }
+
+                if (tokens[0].equals("start")) {
+                    this.display.start();
                 }
             }
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    //send message to server
-    public void send(String message)
-    {
-        //System.out.println("Client sending: " + message);
-        out.println(message);
+    public void send(String message) {
+        this.out.println(message);
     }
-
 }
