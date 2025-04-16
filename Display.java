@@ -124,6 +124,10 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 g2d.drawRect((players.get(i)).getX()-players.get(playerNum-1).getX()+width/2-playerWidth/2, (players.get(i)).getY()-players.get(playerNum-1).getY()+height/2-playerHeight/2, 50, 50);
                 g.drawImage(lebron, (players.get(i)).getX()-players.get(playerNum-1).getX()+width/2-playerWidth/2, (players.get(i)).getY()-players.get(playerNum-1).getY()+height/2-playerHeight/2, 50, 50, null);
             }
+            for (Obstacle obstacle : obstacles) {
+                int[] coords=obstacle.getCoords();
+                g.drawRect(coords[0]-players.get(playerNum-1).getX(), coords[1]-players.get(playerNum-1).getY(), coords[2]-coords[0], coords[3]-coords[1]);
+            }
         } else {
             double colorWidth = (double)width * (double)0.5F;
             double colorHeight = colorWidth / (double)colorsImages[color].getWidth(null) * (double)colorsImages[color].getHeight(null);
