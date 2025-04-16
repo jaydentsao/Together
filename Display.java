@@ -148,25 +148,42 @@ public class Display extends JComponent implements KeyListener, MouseListener {
 
                 // Jumping
                 if (jumping) {
-                    if (currentJumpHeight == jumpHeight) {
+                    if (allowMove[0]) {
+                        if (currentJumpHeight == jumpHeight) {
+                            falling = true;
+                            jumping = false;
+                            currentJumpHeight = 0;
+                        } else {
+                            currentJumpHeight++;
+                            playerYs[playerNum - 1]--;
+                        }
+                    }
+                    else {
                         falling = true;
                         jumping = false;
-                        currentJumpHeight = 0;
-                    } else {
-                        currentJumpHeight++;
-                        playerYs[playerNum - 1]--;
                     }
                 }
                 
                 // Gravity
                 if (falling && allowMove[2]) {
-                    if (gravity != jumpHeight) {
-                        playerYs[playerNum - 1]++;
-                        gravity++;
+                    if (allowMove[0]) {
+                        if (gravity != jumpHeight) {
+                            playerYs[playerNum - 1]++;
+                            gravity++;
+                        }
+                        else {
+                            falling = false;
+                            gravity = 0;
+                        }
                     }
                     else {
-                        falling = false;
-                        gravity = 0;
+                        if (currentJumpHeight != 0) {
+                            playerYs[playerNum - 1]++;
+                            currentJumpHeight--;
+                        }
+                        else {
+                            falling = false;
+                        }
                     }
                 }
                 allowMove = new boolean[] { true, true, true, true };
