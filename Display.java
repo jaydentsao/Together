@@ -286,7 +286,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             directions[0] = true;
         if (e.getKeyCode() == 65 && allowMove[1]) // A -> Left
             directions[1] = true;
-        if (e.getKeyCode() == 83 && allowMove[2]) // S -> Down
+        if (allowMove[2]) // S -> Down
             directions[2] = true;
         if (e.getKeyCode() == 68 && allowMove[3]) // D -> Right
             directions[3] = true;
