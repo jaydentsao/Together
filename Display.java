@@ -66,6 +66,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         }
 
         obstacles = new LinkedList<>();
+        obstacles.add(new Obstacle(-500, 800, 1600, 900, true));
 
         frame = new JFrame(); // create window
         frame.setTitle("Together"); // set title of window
@@ -125,6 +126,14 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 int imageY = players.get(i).getY()-players.get(playerNum-1).getY()+height/2-playerSize/2;
                 g.drawImage(lebron, imageX, imageY, playerSize, playerSize, null);
                 g2d.drawRect(imageX+stroke-(stroke/2), imageY+stroke-(stroke/2), playerSize-stroke, playerSize-stroke);
+
+            }
+            for (Obstacle obstacle : obstacles) {
+                Graphics2D g2d = (Graphics2D)g;
+                g2d.setColor(new Color(0,0,0));
+                g2d.setStroke(new BasicStroke(0));
+                int[] coords=obstacle.getCoords();
+                g2d.fillRect(coords[0]-players.get(playerNum-1).getX()+width/2, coords[1]-players.get(playerNum-1).getY()+height/2, coords[2]-coords[0], coords[3]-coords[1]);
             }
         } else {
             double colorWidth = (double)width * (double)0.5F;
@@ -204,31 +213,31 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                     int[] coords = obstacle.getCoords();
                     // Left Border
                     if (players.get(playerNum - 1).getX() == coords[2]
-                            && (players.get(playerNum - 1).getY() + playerSize < coords[1] || players.get(playerNum - 1).getY() - playerSize > coords[3])) {
+                            && (players.get(playerNum - 1).getY()<=coords[3] && players.get(playerNum - 1).getY()+playerSize>=coords[1])){
                         directions[1] = false;
                         allowMove[1] = false;
                     }
                     // Right Border
-                    if (players.get(playerNum - 1).getX() + playerSize == coords[0]
-                            && (players.get(playerNum - 1).getY() + playerSize < coords[1] || players.get(playerNum - 1).getY() - playerSize > coords[3])) {
+                    if (players.get(playerNum - 1).getX()  + playerSize == coords[0]
+                            && (players.get(playerNum - 1).getY()<=coords[3] && players.get(playerNum - 1).getY()+playerSize>=coords[1])) {
                         directions[3] = false;
                         allowMove[3] = false;
                     }
                     // Top Border
                     if (players.get(playerNum - 1).getY() == coords[3]
-                            && (players.get(playerNum - 1).getX() + playerSize < coords[0] || players.get(playerNum - 1).getX() - playerSize > coords[2])) {
+                            && (players.get(playerNum - 1).getX() +playerSize>=coords[0] || players.get(playerNum - 1).getX()<=coords[2])) {
                         directions[0] = false;
                         allowMove[0] = false;
                     }
                     // Bottom Border
                     if (players.get(playerNum - 1).getY() + playerSize == coords[1]
-                            && (players.get(playerNum - 1).getX() + playerSize < coords[0] || players.get(playerNum - 1).getX() - playerSize > coords[2])) {
+                            && (players.get(playerNum - 1).getX() +playerSize>=coords[0] || players.get(playerNum - 1).getX()<=coords[2])) {
                         directions[2] = false;
                         allowMove[2] = false;
                     }
                 }
-                directions[2]=false;
-                allowMove[2]=false;
+                //directions[2]=false;
+                //allowMove[2]=false;
 
                 repaint();
                 client.send("pos " + (players.get(playerNum - 1)).getX() + " " + (players.get(playerNum - 1)).getY() + " " + playerNum);
@@ -252,6 +261,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         ready = true;
         this.numPlayers = numPlayers;
         this.playerNum = playerNum;
+
         for(int i = 0; i < numPlayers; ++i) {
             int[] playerPosition = new int[]{i*(playerSize+5), 0};
             players.add(new Player(playerPosition, i + 1, 0));
@@ -270,7 +280,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             directions[0] = true;
         if (e.getKeyCode() == 65 && allowMove[1]) // A -> Left
             directions[1] = true;
-        if (e.getKeyCode()==83 &&allowMove[2]) // S -> Down
+        if (allowMove[2]) // S -> Down
             directions[2] = true;
         if (e.getKeyCode() == 68 && allowMove[3]) // D -> Right
             directions[3] = true;
