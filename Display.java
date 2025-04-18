@@ -184,7 +184,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                         gravity = 0;
                     }
                 }
-                allowMove = new boolean[] { true, true, false, true };
+                allowMove = new boolean[] { true, true, true, true };
                 // Player-Player Collisions
                 for (int i = 0; i < numPlayers; i++) {
                     if (i != playerNum - 1) {
@@ -282,11 +282,11 @@ public class Display extends JComponent implements KeyListener, MouseListener {
 
     public void keyPressed(KeyEvent e) {
         // System.out.println(e.getKeyCode());
-        if (e.getKeyCode() == 87 && !allowMove[3]) // W -> Up
+        if (e.getKeyCode() == 87 && !allowMove[2]) // W -> Up
             directions[0] = true;
         if (e.getKeyCode() == 65 && allowMove[1]) // A -> Left
             directions[1] = true;
-        if (allowMove[2]) // S -> Down
+        if (e.getKeyCode()==83 &&allowMove[2]) // S -> Down
             directions[2] = true;
         if (e.getKeyCode() == 68 && allowMove[3]) // D -> Right
             directions[3] = true;
