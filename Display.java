@@ -244,7 +244,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
 
             }
             try { Thread.sleep(1); }
-            catch (Exception _) { }
+            catch (Exception e) { }
         }
     }
 
