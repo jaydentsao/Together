@@ -242,6 +242,8 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                         allowMove[2] = false;
                     }
                 }
+                directions[2]=false;
+                allowMove[2]=false;
 
                 repaint();
                 client.send("pos " + (players.get(playerNum - 1)).getX() + " " + (players.get(playerNum - 1)).getY() + " " + playerNum);
