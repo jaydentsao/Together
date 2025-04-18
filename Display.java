@@ -220,25 +220,25 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                     int[] coords=obstacle.getCoords();
                     // Left Border
                     if (players.get(playerNum - 1).getX() == coords[2]
-                            && (players.get(playerNum - 1).getY() +playerHeight<coords[1] || players.get(playerNum - 1).getY()-playerHeight>coords[3])){
+                            && (players.get(playerNum - 1).getY() -playerHeight<coords[3] && players.get(playerNum - 1).getY()+playerHeight>coords[1])){
                         directions[1] = false;
                         allowMove[1] = false;
                     }
                     // Right Border
                     if (players.get(playerNum - 1).getX()  + playerWidth == coords[0]
-                            && (players.get(playerNum - 1).getY()+playerHeight<coords[1] || players.get(playerNum - 1).getY()-playerHeight>coords[3])) {
+                            && (players.get(playerNum - 1).getY()-playerHeight<coords[3] && players.get(playerNum - 1).getY()+playerHeight>coords[1])) {
                         directions[3] = false;
                         allowMove[3] = false;
                     }
                     // Top Border
                     if (players.get(playerNum - 1).getY() == coords[3]
-                            && (players.get(playerNum - 1).getX() +playerWidth<coords[0] || players.get(playerNum - 1).getX() -playerWidth>coords[2])) {
+                            && (players.get(playerNum - 1).getX() -playerWidth<coords[0] && players.get(playerNum - 1).getX() +playerWidth>coords[2])) {
                         directions[0] = false;
                         allowMove[0] = false;
                     }
                     // Bottom Border
                     if (players.get(playerNum - 1).getY() + playerHeight == coords[1]
-                            && (players.get(playerNum - 1).getX() +playerWidth<coords[0] || players.get(playerNum - 1).getX() -playerWidth>coords[2])) {
+                            && (players.get(playerNum - 1).getX() -playerWidth<coords[0] && players.get(playerNum - 1).getX() +playerWidth>coords[2])) {
                         directions[2] = false;
                         allowMove[2] = false;
                     }
