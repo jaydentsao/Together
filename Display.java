@@ -133,7 +133,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 g2d.setColor(new Color(0,0,0));
                 g2d.setStroke(new BasicStroke(0));
                 int[] coords=obstacle.getCoords();
-                g2d.fillRect(coords[0]-players.get(playerNum-1).getX()+width/2, coords[1]-players.get(playerNum-1).getY()+height/2, coords[2]-coords[0], coords[3]-coords[1]);
+                g2d.fillRect(coords[0]-players.get(playerNum-1).getX(), coords[1]-players.get(playerNum-1).getY()+height/2-playerSize/2, coords[2]-coords[0], coords[3]-coords[1]);
             }
         } else {
             double colorWidth = (double)width * (double)0.5F;
