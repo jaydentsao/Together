@@ -184,7 +184,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                         gravity = 0;
                     }
                 }
-                allowMove = new boolean[] { true, true, true, true };
+                allowMove = new boolean[] { true, true, false, true };
                 // Player-Player Collisions
                 for (int i = 0; i < numPlayers; i++) {
                     if (i != playerNum - 1) {
