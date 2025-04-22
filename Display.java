@@ -24,12 +24,6 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     boolean[] directions; // wasd
     boolean[] allowMove;
 
-    boolean jumping;
-    int jumpHeight;
-    int currentJumpHeight;
-
-    int gravity;
-    boolean falling;
     double velocity;
     double acceleration;
 
@@ -92,18 +86,14 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         directions = new boolean[4];
         allowMove = new boolean[] { true, true, true, true };
 
-        jumping = false;
         start = false;
         ready = false;
-        jumpHeight = 200;
-        currentJumpHeight = 0;
 
         timeBefore = System.currentTimeMillis();
 
-        gravity = 0;
-        acceleration = 0.3;
+        acceleration = -0.4;
         velocity = 0.0;
-        falling = false;
+
         color = 0;
         numPlayers = 1;
         colors = new Color[]{new Color(66, 0, 0), new Color(76, 0, 80), new Color(12, 0, 80), new Color(0, 58, 80), new Color(0, 80, 50), new Color(12, 80, 0), new Color(78, 77, 14), new Color(96, 54, 5), new Color(70, 70, 70), new Color(13, 13, 13)};
@@ -161,38 +151,14 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             if (start && timePassed > 17) {
                 timeBefore = System.currentTimeMillis();
                 //System.out.println(timePassed);
-                if (directions[0] && !jumping)
-                    jumping = true;
+                if (directions[0])
+                    velocity = 10;
                 if (directions[1])
-                    (players.get(playerNum - 1)).setX((players.get(playerNum - 1)).getX() - 1);
-                if (directions[2])
-                    (players.get(playerNum - 1)).setY((players.get(playerNum - 1)).getY() + 1);
+                    (players.get(playerNum - 1)).setX((players.get(playerNum - 1)).getX() - 5);
                 if (directions[3])
-                    (players.get(playerNum - 1)).setX((players.get(playerNum - 1)).getX() + 1);
+                    (players.get(playerNum - 1)).setX((players.get(playerNum - 1)).getX() + 5);
 
-                if (jumping) {
-                    if (currentJumpHeight == jumpHeight) {
-                        falling = true;
-                        jumping = false;
-                        currentJumpHeight = 0;
-                    } else {
-                        currentJumpHeight++;
-                        players.get(playerNum - 1).setY(players.get(playerNum - 1).getY() - 1);
-                    }
-                }
 
-                // Gravity
-                if (allowMove[2]) {
-                    if (gravity != jumpHeight) {
-                        velocity += acceleration;
-//                        System.out.println(velocity);
-                        players.get(playerNum - 1).setY(players.get(playerNum - 1).getY() + (int)velocity);
-                        gravity++;
-                    } else {
-                        falling = false;
-                        gravity = 0;
-                    }
-                }
                 allowMove = new boolean[]{true, true, true, true};
                 // Player-Player Collisions
                 for (int i = 0; i < numPlayers; i++) {
@@ -224,6 +190,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                     }
                 }
                 // Player-Obstacle Collisions
+                boolean onObstacle = false;
                 for (Obstacle obstacle : obstacles) {
                     int[] coords = obstacle.getCoords();
                     // Left Border
@@ -245,14 +212,19 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                         allowMove[0] = false;
                     }
                     // Bottom Border
-                    if (players.get(playerNum - 1).getY() + playerSize == coords[1]
+                    if (players.get(playerNum - 1).getY() + playerSize - velocity >= coords[1] && players.get(playerNum - 1).getY() + playerSize - velocity <= coords[3]
                             && (players.get(playerNum - 1).getX() +playerSize>=coords[0] || players.get(playerNum - 1).getX()<=coords[2])) {
+                        players.get(playerNum - 1).setY(coords[1]-playerSize);
+                        onObstacle = true;
                         directions[2] = false;
                         allowMove[2] = false;
                     }
                 }
-                //directions[2]=false;
-                //allowMove[2]=false;
+                if(!onObstacle) {
+                    if (velocity > -10) velocity += acceleration;
+                } else velocity = 0;
+                players.get(playerNum - 1).setY(players.get(playerNum - 1).getY() - (int)velocity);
+
 
                 repaint();
                 client.send("pos " + (players.get(playerNum - 1)).getX() + " " + (players.get(playerNum - 1)).getY() + " " + playerNum);
