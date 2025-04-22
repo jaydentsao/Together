@@ -30,6 +30,8 @@ public class Display extends JComponent implements KeyListener, MouseListener {
 
     int gravity;
     boolean falling;
+    double velocity;
+    double acceleration;
 
     Client client;
     boolean start;
@@ -40,6 +42,8 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     Color[] colors;
 
     JFrame frame;
+
+    long timeBefore;
 
 
     public Display(String ip) {
@@ -68,6 +72,8 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         obstacles = new LinkedList<>();
         obstacles.add(new Obstacle(-500, 800, 1600, 900, true));
 
+        obstacles.add(new Obstacle(0, 700, 1600, 750, true));
+
         frame = new JFrame(); // create window
         frame.setTitle("Together"); // set title of window
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // closing window will exit program
@@ -92,7 +98,11 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         jumpHeight = 200;
         currentJumpHeight = 0;
 
+        timeBefore = System.currentTimeMillis();
+
         gravity = 0;
+        acceleration = 0.3;
+        velocity = 0.0;
         falling = false;
         color = 0;
         numPlayers = 1;
@@ -110,6 +120,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     }
 
     public void paintComponent(Graphics g) {
+
         if(start)
             g.drawImage(grid, players.get(playerNum-1).getX()*-1, (players.get(playerNum-1)).getY()*-1, grid.getWidth(null) * 4, grid.getHeight(null) * 4, null);
         else
@@ -131,7 +142,6 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             for (Obstacle obstacle : obstacles) {
                 Graphics2D g2d = (Graphics2D)g;
                 g2d.setColor(new Color(0,0,0));
-                g2d.setStroke(new BasicStroke(0));
                 int[] coords=obstacle.getCoords();
                 g2d.fillRect(coords[0]-players.get(playerNum-1).getX(), coords[1]-players.get(playerNum-1).getY()+height/2-playerSize/2, coords[2]-coords[0], coords[3]-coords[1]);
             }
@@ -144,10 +154,13 @@ public class Display extends JComponent implements KeyListener, MouseListener {
 
     public void run() {
         while(true) {
+            long timePassed = System.currentTimeMillis() - timeBefore;
             Dimension size = frame.getSize();
             width = size.width;
             height = size.height;
-            if (start) {
+            if (start && timePassed > 17) {
+                timeBefore = System.currentTimeMillis();
+                //System.out.println(timePassed);
                 if (directions[0] && !jumping)
                     jumping = true;
                 if (directions[1])
@@ -169,9 +182,11 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 }
 
                 // Gravity
-                if (falling && allowMove[2]) {
+                if (allowMove[2]) {
                     if (gravity != jumpHeight) {
-                        players.get(playerNum - 1).setY(players.get(playerNum - 1).getY() + 1);
+                        velocity += acceleration;
+//                        System.out.println(velocity);
+                        players.get(playerNum - 1).setY(players.get(playerNum - 1).getY() + (int)velocity);
                         gravity++;
                     } else {
                         falling = false;
@@ -280,8 +295,6 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             directions[0] = true;
         if (e.getKeyCode() == 65 && allowMove[1]) // A -> Left
             directions[1] = true;
-        if (allowMove[2]) // S -> Down
-            directions[2] = true;
         if (e.getKeyCode() == 68 && allowMove[3]) // D -> Right
             directions[3] = true;
 
@@ -326,8 +339,6 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             directions[0] = false;
         if (e.getKeyCode() == 65) // A -> Left
             directions[1] = false;
-        if (e.getKeyCode() == 83) // S -> Down
-            directions[2] = false;
         if (e.getKeyCode() == 68) // D -> Right
             directions[3] = false;
     }
