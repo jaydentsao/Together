@@ -154,9 +154,9 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 if (directions[0])
                     velocity = 10;
                 if (directions[1])
-                    (players.get(playerNum - 1)).setX((players.get(playerNum - 1)).getX() - 5);
+                    (players.get(playerNum - 1)).setX((players.get(playerNum - 1)).getX() - 8);
                 if (directions[3])
-                    (players.get(playerNum - 1)).setX((players.get(playerNum - 1)).getX() + 5);
+                    (players.get(playerNum - 1)).setX((players.get(playerNum - 1)).getX() + 8);
 
 
                 allowMove = new boolean[]{true, true, true, true};
@@ -250,7 +250,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         this.playerNum = playerNum;
 
         for(int i = 0; i < numPlayers; ++i) {
-            int[] playerPosition = new int[]{i*(playerSize+5), 0};
+            int[] playerPosition = new int[]{i*(playerSize+8), 0};
             players.add(new Player(playerPosition, i + 1, 0));
         }
         //System.out.println("ready");
