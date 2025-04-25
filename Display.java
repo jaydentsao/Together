@@ -26,6 +26,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
 
     double velocity;
     double acceleration;
+    int speed;
 
     Client client;
     boolean start;
@@ -92,6 +93,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
 
         acceleration = -0.4;
         velocity = 0.0;
+        speed = 8;
 
         color = 0;
         numPlayers = 1;
@@ -155,9 +157,9 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 if (directions[0] && allowMove[0])
                     velocity = 10;
                 if (directions[1] && allowMove[1])
-                    (players.get(playerNum - 1)).setX((players.get(playerNum - 1)).getX() - 8);
+                    (players.get(playerNum - 1)).setX((players.get(playerNum - 1)).getX() - speed);
                 if (directions[3] && allowMove[3])
-                    (players.get(playerNum - 1)).setX((players.get(playerNum - 1)).getX() + 8);
+                    (players.get(playerNum - 1)).setX((players.get(playerNum - 1)).getX() + speed);
 
 
                 allowMove = new boolean[]{false, true, true, true};
@@ -167,13 +169,17 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                     if(i != playerNum - 1) {
                         int[] coords = obstacles.get(i).getCoords();
                         // Left Border
-                        if (players.get(playerNum - 1).getX() == coords[2]
-                                && (players.get(playerNum - 1).getY() <= coords[3] && players.get(playerNum - 1).getY() + playerSize >= coords[1])) {
+                        if (players.get(playerNum - 1).getX() - speed >= coords[0] && players.get(playerNum - 1).getX() - speed <= coords[2]
+                                && (players.get(playerNum - 1).getY() < coords[3] && players.get(playerNum - 1).getY() + playerSize > coords[1])) {
+                            if (directions[1] && allowMove[1] && players.get(playerNum - 1).getX() != coords[2])
+                                (players.get(playerNum - 1)).setX(coords[2]);
                             allowMove[1] = false;
                         }
                         // Right Border
-                        if (players.get(playerNum - 1).getX() + playerSize == coords[0]
-                                && (players.get(playerNum - 1).getY() <= coords[3] && players.get(playerNum - 1).getY() + playerSize >= coords[1])) {
+                        if (players.get(playerNum - 1).getX() + playerSize + speed >= coords[0] && players.get(playerNum - 1).getX() + playerSize + speed <= coords[2]
+                                && (players.get(playerNum - 1).getY() < coords[3] && players.get(playerNum - 1).getY() + playerSize > coords[1])) {
+                            if (directions[3] && allowMove[3] && players.get(playerNum - 1).getX() + playerSize != coords[0])
+                                (players.get(playerNum - 1)).setX(coords[0]-playerSize);
                             allowMove[3] = false;
                         }
                         // Top Border
@@ -183,7 +189,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                         }
                         // Bottom Border
                         if (players.get(playerNum - 1).getY() + playerSize - velocity >= coords[1] && players.get(playerNum - 1).getY() + playerSize - velocity <= coords[3]
-                                && players.get(playerNum - 1).getX() + playerSize >= coords[0] && players.get(playerNum - 1).getX() <= coords[2]) {
+                                && players.get(playerNum - 1).getX() + playerSize > coords[0] && players.get(playerNum - 1).getX() < coords[2]) {
                             players.get(playerNum - 1).setY(coords[1] - playerSize);
                             onObstacle = true;
                             allowMove[0] = true;
