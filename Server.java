@@ -19,7 +19,7 @@ public class Server
                 Socket socket = serverSocket.accept();
 
                 //create ServerThread for handling connection for player 1
-                threads[i]= new ServerThread(socket, this, i+1);
+                threads[i]= new ServerThread(socket, this, i);
             }
             for (int i = 0; i < numPlayers; i++) {
                 threads[i].send("ready " + numPlayers + " " + threads[i].playerNum);
