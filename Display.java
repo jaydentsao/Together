@@ -134,8 +134,21 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 centerOtherY += offsetY;
                 
                 Graphics2D g2d = (Graphics2D)g;
-                g2d.setColor(Color.BLACK);
-                g2d.setStroke(new BasicStroke(10));
+                if (forceX() > 5) {
+                    g2d.setColor(Color.RED);
+                    g2d.setStroke(new BasicStroke(6));
+
+                }
+                else if (forceX() > 3) {
+                    g2d.setColor(Color.ORANGE);
+                    g2d.setStroke(new BasicStroke(8));
+
+                }
+                else {
+                    g2d.setColor(Color.GREEN);
+                    g2d.setStroke(new BasicStroke(10));
+
+                }
                 g2d.drawLine(centerX, centerY, centerOtherX, centerOtherY);
             }
             for(int i = 0; i < numPlayers; ++i) {
