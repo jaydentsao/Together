@@ -66,7 +66,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         }
 
         obstacles = new ArrayList<>();
-        obstacles.add(new Obstacle(-500, 800, 1600, 900, true));
+        obstacles.add(new Obstacle(-500, 860, 1600, 960, true));
         obstacles.add(new Obstacle(0, 700, 1600, 750, true));
 
         frame = new JFrame(); // create window
@@ -158,9 +158,9 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 if (directions[0] && allowMove[0])
                     velocity = 10;
                 if (directions[1] && allowMove[1])
-                    (players.get(playerNum)).setX((players.get(playerNum)).getX() - speed );
+                    (players.get(playerNum)).setX((players.get(playerNum)).getX() - speed);
                 if (directions[3] && allowMove[3])
-                    (players.get(playerNum)).setX((players.get(playerNum)).getX() + speed );
+                    (players.get(playerNum)).setX((players.get(playerNum)).getX() + speed);
 
 
                 allowMove = new boolean[]{false, true, true, true};
@@ -184,9 +184,11 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                             allowMove[3] = false;
                         }
                         // Top Border
-                        if (players.get(playerNum).getY() == coords[3]
-                                && (players.get(playerNum).getX() + playerSize >= coords[0] || players.get(playerNum).getX() <= coords[2])) {
-
+                        if (players.get(playerNum).getY() - velocity >= coords[1] && players.get(playerNum).getY() - velocity <= coords[3]
+                                && players.get(playerNum).getX() + playerSize > coords[0] && players.get(playerNum).getX() < coords[2]) {
+                            if(players.get(playerNum).getY() != coords[3])
+                                (players.get(playerNum)).setY(coords[3]);
+                            velocity = 0;
                         }
                         // Bottom Border
                         if (players.get(playerNum).getY() + playerSize - velocity >= coords[1] && players.get(playerNum).getY() + playerSize - velocity <= coords[3]
