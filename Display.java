@@ -133,10 +133,13 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 centerOtherX += offsetX;
                 centerOtherY += offsetY;
                 
+                // Smooth Transition of Connection Cord Color and Thickness
                 int forceX = Math.abs(forceX());
                 float lineThickness = 15 - 1.333f * forceX;
                 int rColor = 0 + 42 * forceX;
+                rColor = rColor > 255 ? 255 : rColor;
                 int gColor = 255 - 42 * forceX;
+                gColor = gColor < 0 ? 0 : gColor;
 
                 Graphics2D g2d = (Graphics2D)g;
                 g2d.setColor(new Color(rColor, gColor, 0));
