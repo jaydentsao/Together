@@ -241,14 +241,14 @@ public class Display extends JComponent implements KeyListener, MouseListener {
 
     private int forceX(){
         if(playerNum==0){
-            int force=k*(players.get(playerNum+1).getX()-players.get(playerNum).getX());
+            int force=k*(players.get(playerNum).getX()-players.get(playerNum+1).getX());
             return force/100;
         }
         if(playerNum==numPlayers-1){
             int force=k*(players.get(playerNum).getX()-players.get(playerNum-1).getX());
             return force/100;
         }
-        int force=k*(players.get(playerNum+1).getX()-players.get(playerNum-1).getX());
+        int force=k*(players.get(playerNum).getX()-players.get(playerNum-1).getX())+k*(players.get(playerNum).getX()-players.get(playerNum+1).getX());
         return force/100;
     }
 
