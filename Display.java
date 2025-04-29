@@ -7,7 +7,6 @@ import java.awt.event.MouseListener;
 import java.net.URL;
 import java.util.*;
 
-
 public class Display extends JComponent implements KeyListener, MouseListener {
     private final Image lebron;
     private final Image grid;
@@ -118,6 +117,26 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             g.drawImage(grid, 0, 0, grid.getWidth(null) * 4, grid.getHeight(null) * 4, null);
 
         if (start) {
+            for (int i = 0; i < numPlayers - 1; i++) {
+                int centerX = players.get(i).getX() + playerSize / 2;
+                int centerY = players.get(i).getY() + playerSize / 2;
+                int centerOtherX = players.get(i + 1).getX() + playerSize / 2;
+                int centerOtherY = players.get(i + 1).getY() + playerSize / 2;
+                
+                // Adjust and Center Coordinates
+                int offsetX = width / 2 - playerSize / 2 - players.get(playerNum).getX();
+                int offsetY = height / 2 - playerSize / 2 - players.get(playerNum).getY();
+                
+                centerX += offsetX;
+                centerY += offsetY;
+                centerOtherX += offsetX;
+                centerOtherY += offsetY;
+                
+                Graphics2D g2d = (Graphics2D)g;
+                g2d.setColor(Color.BLACK);
+                g2d.setStroke(new BasicStroke(10));
+                g2d.drawLine(centerX, centerY, centerOtherX, centerOtherY);
+            }
             for(int i = 0; i < numPlayers; ++i) {
                 Graphics2D g2d = (Graphics2D)g;
                 g2d.setColor(colors[(players.get(i)).getColor()]);
