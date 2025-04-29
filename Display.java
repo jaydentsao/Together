@@ -230,8 +230,12 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                     velocity = 10;
                 if (directions[1] && allowMove[1])
                     (players.get(playerNum)).setX((players.get(playerNum)).getX() - speed -forceX());
+                else if(allowMove[1]&& forceX()>0 &&!onObstacle)
+                    (players.get(playerNum)).setX((players.get(playerNum)).getX() -forceX());
                 if (directions[3] && allowMove[3])
                     (players.get(playerNum)).setX((players.get(playerNum)).getX() + speed -forceX());
+                else if(allowMove[3]&& forceX()<0 &&!onObstacle)
+                    (players.get(playerNum)).setX((players.get(playerNum)).getX() -forceX());
                 players.get(playerNum).setY(players.get(playerNum).getY() - (int)velocity);
 
 
