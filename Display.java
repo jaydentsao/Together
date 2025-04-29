@@ -12,7 +12,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     private final Image lebron;
     private final Image grid;
     private final Image[] colorsImages;
-    private static final int k=8;
+    private static final int k=2;
 
     private int width;
     private int height;
@@ -155,13 +155,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             if (start && timePassed > 17) {
                 timeBefore = System.currentTimeMillis();
                 //System.out.println(timePassed);
-                if (directions[0] && allowMove[0])
-                    velocity = 10;
-                if (directions[1] && allowMove[1])
-                    (players.get(playerNum)).setX((players.get(playerNum)).getX() - speed);
-                if (directions[3] && allowMove[3])
-                    (players.get(playerNum)).setX((players.get(playerNum)).getX() + speed);
-
+                
 
                 allowMove = new boolean[]{false, true, true, true};
                 // Player-Obstacle Collisions
@@ -208,6 +202,12 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                     allowMove[0] = true;
                 }
 
+                if (directions[0] && allowMove[0])
+                    velocity = 10;
+                if (directions[1] && allowMove[1])
+                    (players.get(playerNum)).setX((players.get(playerNum)).getX() - speed -forceX());
+                if (directions[3] && allowMove[3])
+                    (players.get(playerNum)).setX((players.get(playerNum)).getX() + speed -forceX());
                 players.get(playerNum).setY(players.get(playerNum).getY() - (int)velocity);
 
 
@@ -225,7 +225,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             int force=k*(players.get(playerNum+1).getX()-players.get(playerNum).getX());
             return force/100;
         }
-        if(playerNum==numPlayers){
+        if(playerNum==numPlayers-1){
             int force=k*(players.get(playerNum).getX()-players.get(playerNum-1).getX());
             return force/100;
         }
@@ -236,14 +236,14 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     private int forceY(){
         if(playerNum==0){
             int force=k*(players.get(playerNum+1).getY()-players.get(playerNum).getY());
-            return force/100;
+            return force/50;
         }
-        if(playerNum==numPlayers){
+        if(playerNum==numPlayers-1){
             int force=k*(players.get(playerNum).getY()-players.get(playerNum-1).getY());
-            return force/100;
+            return force/50;
         }
         int force=k*(players.get(playerNum+1).getY()-players.get(playerNum-1).getY());
-        return force/100;
+        return force/50;
     }
 
     public void updatePosition(int x, int y, int player) {
