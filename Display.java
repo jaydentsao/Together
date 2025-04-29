@@ -11,7 +11,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     private final Image lebron;
     private final Image grid;
     private final Image[] colorsImages;
-    private static final int k=2;
+    private static final double k=0.015;
 
     private int width;
     private int height;
@@ -222,7 +222,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 }
 
                 if(!onObstacle) {
-                    if (velocity > -20) velocity += acceleration;
+                    if (velocity > -20) velocity += acceleration+forceY();
                     allowMove[0] = false;
                 } else {
                     velocity = 0;
@@ -249,28 +249,28 @@ public class Display extends JComponent implements KeyListener, MouseListener {
 
     private int forceX(){
         if(playerNum==0){
-            int force=k*(players.get(playerNum).getX()-players.get(playerNum+1).getX());
-            return force/100;
+            double force=k*(players.get(playerNum).getX()-players.get(playerNum+1).getX());
+            return (int)force;
         }
         if(playerNum==numPlayers-1){
-            int force=k*(players.get(playerNum).getX()-players.get(playerNum-1).getX());
-            return force/100;
+            double force=k*(players.get(playerNum).getX()-players.get(playerNum-1).getX());
+            return (int)force;
         }
-        int force=k*(players.get(playerNum).getX()-players.get(playerNum-1).getX())+k*(players.get(playerNum).getX()-players.get(playerNum+1).getX());
-        return force/100;
+        double force=k*(2*players.get(playerNum).getX()-players.get(playerNum-1).getX()-players.get(playerNum+1).getX());
+        return (int)force;
     }
 
     private int forceY(){
         if(playerNum==0){
-            int force=k*(players.get(playerNum+1).getY()-players.get(playerNum).getY());
-            return force/50;
+            double force=k*(players.get(playerNum).getY()-players.get(playerNum+1).getY())/4;
+            return (int)force;
         }
         if(playerNum==numPlayers-1){
-            int force=k*(players.get(playerNum).getY()-players.get(playerNum-1).getY());
-            return force/50;
+            double force=k*(players.get(playerNum).getY()-players.get(playerNum-1).getY())/4;
+            return (int)force;
         }
-        int force=k*(players.get(playerNum+1).getY()-players.get(playerNum-1).getY());
-        return force/50;
+        double force=k*(2*players.get(playerNum).getY()-players.get(playerNum-1).getY()-players.get(playerNum+1).getY())/4;
+        return (int)force;
     }
 
     public void updatePosition(int x, int y, int player) {
