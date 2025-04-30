@@ -136,8 +136,9 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 // Smooth Transition of Connection Cord Color and Thickness
                 int forceX = Math.abs(forceX());
                 int forceY = Math.abs(forceY());
-                int netForce = (int) Math.sqrt(forceX * forceX + 8 * (forceY * forceY));
+                int netForce = (int) Math.sqrt(forceX * forceX + (15 * forceY * forceY));
                 float lineThickness = 15 - 1.333f * netForce;
+                lineThickness = lineThickness < 5 ? 5 : lineThickness;
                 int rColor = 0 + 42 * netForce;
                 rColor = rColor > 255 ? 255 : rColor;
                 int gColor = 255 - 42 * netForce;
