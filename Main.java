@@ -8,7 +8,8 @@ public class  Main
         joinGame("localhost");
         joinGame("localhost");
         //joinGame("localhost");
-        //joinGame("localhost");
+        //joinGame("10.13.30.47");
+
         
         //if joining a game, run this code with host's IP address:
         //joinGame("10.13.30.46");

@@ -134,11 +134,10 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 centerOtherY += offsetY;
                 
                 // Smooth Transition of Connection Cord Color and Thickness
-                int forceX = Math.abs(forceX());
-                int forceY = Math.abs(forceY());
-                int netForce = (int) Math.sqrt(forceX * forceX + (15 * forceY * forceY));
-                float lineThickness = 15 - 1.333f * netForce;
-                lineThickness = lineThickness < 5 ? 5 : lineThickness;
+                int forceX = Math.abs(forceX(playerNum));
+                int forceY = Math.abs(forceY(playerNum));
+                int netForce = (int) Math.sqrt(forceX * forceX + 8 * (forceY * forceY));
+                float lineThickness = Math.max(15 - 1.333f * netForce, 0.000001f);
                 int rColor = 0 + 42 * netForce;
                 rColor = rColor > 255 ? 255 : rColor;
                 int gColor = 255 - 42 * netForce;
@@ -225,7 +224,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 }
 
                 if(!onObstacle) {
-                    if (velocity > -20) velocity += acceleration+forceY();
+                    if (velocity > -20) velocity += acceleration+forceY(playerNum);
                     allowMove[0] = false;
                 } else {
                     velocity = 0;
@@ -235,13 +234,13 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 if (directions[0] && allowMove[0])
                     velocity = 10;
                 if (directions[1] && allowMove[1])
-                    (players.get(playerNum)).setX((players.get(playerNum)).getX() - speed -forceX());
-                else if(allowMove[1]&& forceX()>0 &&!onObstacle)
-                    (players.get(playerNum)).setX((players.get(playerNum)).getX() -forceX());
+                    (players.get(playerNum)).setX((players.get(playerNum)).getX() - speed -forceX(playerNum));
+                else if(allowMove[1]&& forceX(playerNum)>0 &&!onObstacle)
+                    (players.get(playerNum)).setX((players.get(playerNum)).getX() -forceX(playerNum));
                 if (directions[3] && allowMove[3])
-                    (players.get(playerNum)).setX((players.get(playerNum)).getX() + speed -forceX());
-                else if(allowMove[3]&& forceX()<0 &&!onObstacle)
-                    (players.get(playerNum)).setX((players.get(playerNum)).getX() -forceX());
+                    (players.get(playerNum)).setX((players.get(playerNum)).getX() + speed -forceX(playerNum));
+                else if(allowMove[3]&& forceX(playerNum)<0 &&!onObstacle)
+                    (players.get(playerNum)).setX((players.get(playerNum)).getX() -forceX(playerNum));
                 players.get(playerNum).setY(players.get(playerNum).getY() - (int)velocity);
 
 
@@ -254,29 +253,29 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         }
     }
 
-    private int forceX(){
-        if(playerNum==0){
-            double force=k*(players.get(playerNum).getX()-players.get(playerNum+1).getX());
+    private int forceX(int player){
+        if(player==0){
+            double force=k*(players.get(player).getX()-players.get(player+1).getX());
             return (int)force;
         }
-        if(playerNum==numPlayers-1){
-            double force=k*(players.get(playerNum).getX()-players.get(playerNum-1).getX());
+        if(player==numPlayers-1){
+            double force=k*(players.get(player).getX()-players.get(player-1).getX());
             return (int)force;
         }
-        double force=k*(2*players.get(playerNum).getX()-players.get(playerNum-1).getX()-players.get(playerNum+1).getX());
+        double force=k*(2*players.get(player).getX()-players.get(player-1).getX()-players.get(player+1).getX());
         return (int)force;
     }
 
-    private int forceY(){
-        if(playerNum==0){
-            double force=k*(players.get(playerNum).getY()-players.get(playerNum+1).getY())/4;
+    private int forceY(int player){
+        if(player==0){
+            double force=k*(players.get(player).getY()-players.get(player+1).getY())/4;
             return (int)force;
         }
-        if(playerNum==numPlayers-1){
-            double force=k*(players.get(playerNum).getY()-players.get(playerNum-1).getY())/4;
+        if(player==numPlayers-1){
+            double force=k*(players.get(player).getY()-players.get(player-1).getY())/4;
             return (int)force;
         }
-        double force=k*(2*players.get(playerNum).getY()-players.get(playerNum-1).getY()-players.get(playerNum+1).getY())/4;
+        double force=k*(2*players.get(player).getY()-players.get(player-1).getY()-players.get(player+1).getY())/6;
         return (int)force;
     }
 
