@@ -137,11 +137,9 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 int forceX = Math.abs(forceX(playerNum));
                 int forceY = Math.abs(forceY(playerNum));
                 int netForce = (int) Math.sqrt(forceX * forceX + 8 * (forceY * forceY));
-                float lineThickness = Math.max(15 - 1.333f * netForce, 0.000001f);
-                int rColor = 0 + 42 * netForce;
-                rColor = rColor > 255 ? 255 : rColor;
-                int gColor = 255 - 42 * netForce;
-                gColor = gColor < 0 ? 0 : gColor;
+                float lineThickness = Math.max(15 - 1.333f * netForce, 5);
+                int rColor = Math.min(0 + 42 * netForce, 255);
+                int gColor = Math.max(255 - 42 * netForce, 0);
 
                 Graphics2D g2d = (Graphics2D)g;
                 g2d.setColor(new Color(rColor, gColor, 0));
