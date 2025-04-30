@@ -7,10 +7,12 @@ import java.awt.event.MouseListener;
 import java.net.URL;
 import java.util.*;
 
+
 public class Display extends JComponent implements KeyListener, MouseListener {
     private final Image lebron;
     private final Image grid;
     private final Image[] colorsImages;
+    private final Image level;
     private static final double k=0.015;
 
     private int width;
@@ -64,9 +66,26 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             colorsImages[i] = new ImageIcon(url3).getImage();
         }
 
+        String levelName = "level1.png";
+        URL url4 = getClass().getResource(levelName);
+        if (url4 == null)
+            throw new RuntimeException("Unable to load:  " + levelName);
+        level = new ImageIcon(url4).getImage();
+
         obstacles = new ArrayList<>();
-        obstacles.add(new Obstacle(-500, 860, 1600, 960, true));
-        obstacles.add(new Obstacle(0, 700, 1600, 750, true));
+//        obstacles.add(new Obstacle(-500, 860, 1600, 960, true));
+//        obstacles.add(new Obstacle(0, 700, 1600, 750, true));
+
+        obstacles.add(new Obstacle(-1463, -463, -1413, 537, true));
+        obstacles.add(new Obstacle(-1413, 487, -913, 537, true));
+        obstacles.add(new Obstacle(-777, 401, -577, 451, true));
+        obstacles.add(new Obstacle(-449, 345, -249, 395, true));
+        obstacles.add(new Obstacle(-143, 297, 57, 347, true));
+        obstacles.add(new Obstacle(231, 453, 431, 503, true));
+        obstacles.add(new Obstacle(577, 405, 777, 455, true));
+        obstacles.add(new Obstacle(987, 487, 1487, 537, true));
+        obstacles.add(new Obstacle(1487, -463, 1537, 537, true));
+
 
         frame = new JFrame(); // create window
         frame.setTitle("Together"); // set title of window
@@ -113,9 +132,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     public void paintComponent(Graphics g) {
 
         if(start)
-            g.drawImage(grid, players.get(playerNum).getX()*-1, (players.get(playerNum)).getY()*-1, grid.getWidth(null) * 4, grid.getHeight(null) * 4, null);
-        else
-            g.drawImage(grid, 0, 0, grid.getWidth(null) * 4, grid.getHeight(null) * 4, null);
+            g.drawImage(level, players.get(playerNum).getX()*-1 - level.getWidth(null)/2 + width/2, (players.get(playerNum)).getY()*-1 - level.getHeight(null)/2 + height/2, null);
 
         if (start) {
             for (int i = 0; i < numPlayers - 1; i++) {
@@ -123,16 +140,16 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 int centerY = players.get(i).getY() + playerSize / 2;
                 int centerOtherX = players.get(i + 1).getX() + playerSize / 2;
                 int centerOtherY = players.get(i + 1).getY() + playerSize / 2;
-                
+
                 // Adjust and Center Coordinates
                 int offsetX = width / 2 - playerSize / 2 - players.get(playerNum).getX();
                 int offsetY = height / 2 - playerSize / 2 - players.get(playerNum).getY();
-                
+
                 centerX += offsetX;
                 centerY += offsetY;
                 centerOtherX += offsetX;
                 centerOtherY += offsetY;
-                
+
                 // Smooth Transition of Connection Cord Color and Thickness
                 int forceX = Math.abs(forceX(playerNum));
                 int forceY = Math.abs(forceY(playerNum));
@@ -164,7 +181,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             for (int i = numPlayers; i < obstacles.size(); i++) {
                 Obstacle obstacle = obstacles.get(i) ;
                 Graphics2D g2d = (Graphics2D)g;
-                g2d.setColor(new Color(0,0,0));
+                g2d.setColor(new Color(0,0,100));
                 int[] coords=obstacle.getCoords();
                 g2d.fillRect(coords[0]-players.get(playerNum).getX()+width/2-playerSize/2, coords[1]-players.get(playerNum).getY()+height/2-playerSize/2, coords[2]-coords[0], coords[3]-coords[1]);
             }
@@ -184,7 +201,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             if (start && timePassed > 17) {
                 timeBefore = System.currentTimeMillis();
                 //System.out.println(timePassed);
-                
+
 
                 allowMove = new boolean[]{false, true, true, true};
                 // Player-Obstacle Collisions
@@ -294,7 +311,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         this.playerNum = playerNum;
 
         for(int i = 0; i < numPlayers; ++i) {
-            int[] playerPosition = new int[]{i*(playerSize+5), 0};
+            int[] playerPosition = new int[]{i*(playerSize+5) - 1400, 100};
             players.add(new Player(playerPosition, i + 1, 0));
             obstacles.add(i, new Obstacle(players.get(i).getX(), players.get(i).getY(), players.get(i).getX()+ playerSize, players.get(i).getY() + playerSize, true));
         }
