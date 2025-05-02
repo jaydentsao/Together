@@ -24,6 +24,7 @@ public class Server
             for (int i = 0; i < numPlayers; i++) {
                 threads[i].send("ready " + numPlayers + " " + threads[i].playerNum);
             }
+            System.out.println("Server connected to all clients successfully");
         }
         catch(IOException e)
         {
