@@ -3,12 +3,12 @@ public class  Main
     public static void main(String[] args)
     {
         //if hosting a game run this code:
-        hostGame(3);
+        hostGame(2);
         joinGame("localhost");
         joinGame("localhost");
-        joinGame("localhost");
+//        joinGame("localhost");
         //joinGame("localhost");
-        //joinGame("10.13.30.47");
+//        joinGame("169.254.253.11");
 
         
         //if joining a game, run this code with host's IP address:

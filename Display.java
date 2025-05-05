@@ -260,6 +260,11 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 players.get(playerNum).setY(players.get(playerNum).getY() - (int)velocity);
 
 
+                if(players.get(playerNum).getY() > 2000){
+                    client.send("died");
+                    died();
+                }
+
                 repaint();
                 client.send("pos " + (players.get(playerNum)).getX() + " " + (players.get(playerNum)).getY() + " " + playerNum);
 
@@ -310,11 +315,18 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         this.playerNum = playerNum;
 
         for(int i = 0; i < numPlayers; ++i) {
-            int[] playerPosition = new int[]{i*(playerSize+5) - 1400, 100};
+            int[] playerPosition = new int[]{i*(playerSize+5) - 1400, 200};
             players.add(new Player(playerPosition, i + 1, 0));
             obstacles.add(i, new Obstacle(players.get(i).getX(), players.get(i).getY(), players.get(i).getX()+ playerSize, players.get(i).getY() + playerSize, true));
         }
         //System.out.println("ready");
+    }
+
+    public void died(){
+        players.get(playerNum).setX(playerNum*(playerSize+5) - 1400);
+        players.get(playerNum).setY(200);
+        velocity = 0;
+
     }
 
     public void start() {
