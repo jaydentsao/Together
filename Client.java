@@ -55,6 +55,10 @@ public class Client extends Thread {
                 if(tokens[0].equals("died")) {
                     this.display.died();
                 }
+
+                if(tokens[0].equals("complete")) {
+                    this.display.completed(Integer.parseInt(tokens[1]));
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
