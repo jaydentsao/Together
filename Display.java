@@ -9,10 +9,11 @@ import java.util.*;
 
 
 public class Display extends JComponent implements KeyListener, MouseListener {
-    private final Image lebron;
     private final Image grid;
-    private final Image[] colorsImages;
+    private final Image lebronEdit;
+    private final Image[] lebronSelectImages;
     private final Image[] levelImages;
+    private final Image[] lebronImages;
     private static final double k=0.015;
 
     private int width;
@@ -33,10 +34,10 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     Client client;
     boolean start;
     boolean ready;
+    boolean editPlaying;
     int numPlayers;
     int playerNum;
-    int color;
-    Color[] colors;
+    int lebronNum;
 
     JFrame frame;
 
@@ -45,13 +46,19 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     boolean[] finished;
     int level;
 
+    private String name;
+
 
     public Display(String ip) {
-        String lebronName = "lebron.jpg";
-        URL url1 = getClass().getResource(lebronName);
-        if (url1 == null)
-            throw new RuntimeException("Unable to load:  " + lebronName);
-        lebron = new ImageIcon(url1).getImage();
+        lebronImages = new Image[6];
+        for(int i = 0; i < 6; ++i) {
+            String lebronName = "Lebrons/lebron" + i + ".png";
+            URL url1 = getClass().getResource(lebronName);
+            if (url1 == null) {
+                throw new RuntimeException("Unable to load:  " + lebronName);
+            }
+            lebronImages[i] = new ImageIcon(url1).getImage();
+        }
 
         String gridName = "graph.jpg";
         URL url2 = getClass().getResource(gridName);
@@ -59,14 +66,14 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             throw new RuntimeException("Unable to load:  " + gridName);
         grid = new ImageIcon(url2).getImage();
 
-        colorsImages = new Image[10];
-        for(int i = 0; i < 10; ++i) {
-            String colorsName = "Colors/Colors" + i + ".png";
-            URL url3 = getClass().getResource(colorsName);
+        lebronSelectImages = new Image[6];
+        for(int i = 0; i < 6; ++i) {
+            String lebronSelectName = "LebronSelect/Lebrons" + i + ".png";
+            URL url3 = getClass().getResource(lebronSelectName);
             if (url3 == null) {
-                throw new RuntimeException("Unable to load:  " + colorsName);
+                throw new RuntimeException("Unable to load:  " + lebronSelectName);
             }
-            colorsImages[i] = new ImageIcon(url3).getImage();
+            lebronSelectImages[i] = new ImageIcon(url3).getImage();
         }
         levelImages = new Image[2];
         for(int i = 0; i < 2; ++i) {
@@ -77,6 +84,12 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             }
             levelImages[i] = new ImageIcon(url4).getImage();
         }
+
+        String editName = "HDLebrons/lebron0.png";
+        URL url5 = getClass().getResource(editName);
+        if (url5 == null)
+            throw new RuntimeException("Unable to load:  " + editName);
+        lebronEdit = new ImageIcon(url5).getImage();
 
         obstacles = new ArrayList<>();
 //        obstacles.add(new Obstacle(-500, 860, 1600, 960, true));
@@ -120,12 +133,14 @@ public class Display extends JComponent implements KeyListener, MouseListener {
 
         playerSize = 75;
 
+        name = "";
 
         directions = new boolean[4];
         allowMove = new boolean[] { true, true, true, true };
 
         start = false;
         ready = false;
+        editPlaying = true;
 
         timeBefore = System.currentTimeMillis();
 
@@ -133,9 +148,8 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         velocity = 0.0;
         speed = 8;
 
-        color = 0;
+        lebronNum = 0;
         numPlayers = 1;
-        colors = new Color[]{new Color(66, 0, 0), new Color(76, 0, 80), new Color(12, 0, 80), new Color(0, 58, 80), new Color(0, 80, 50), new Color(12, 80, 0), new Color(78, 77, 14), new Color(96, 54, 5), new Color(70, 70, 70), new Color(13, 13, 13)};
         players = new ArrayList<Player>();
 
         level = 0;
@@ -151,11 +165,8 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     }
 
     public void paintComponent(Graphics g) {
-
-        if(start)
-            g.drawImage(levelImages[level], players.get(playerNum).getX()*-1 - levelImages[level].getWidth(null)/2 + width/2, (players.get(playerNum)).getY()*-1 - levelImages[level].getHeight(null)/2 + height/2, null);
-
         if (start) {
+            g.drawImage(levelImages[level], players.get(playerNum).getX()*-1 - levelImages[level].getWidth(null)/2 + width/2, (players.get(playerNum)).getY()*-1 - levelImages[level].getHeight(null)/2 + height/2, null);
             for (int i = 0; i < numPlayers - 1; i++) {
                 int centerX = players.get(i).getX() + playerSize / 2;
                 int centerY = players.get(i).getY() + playerSize / 2;
@@ -186,16 +197,18 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 g2d.drawLine(centerX, centerY, centerOtherX, centerOtherY);
             }
             for(int i = 0; i < numPlayers; ++i) {
-                Graphics2D g2d = (Graphics2D)g;
-                g2d.setColor(colors[(players.get(i)).getColor()]);
-                int stroke = 5;
-                g2d.setStroke(new BasicStroke(stroke));
-
                 int imageX = players.get(i).getX()-players.get(playerNum).getX()+width/2-playerSize/2;
                 int imageY = players.get(i).getY()-players.get(playerNum).getY()+height/2-playerSize/2;
-                g.drawImage(lebron, imageX, imageY, playerSize, playerSize, null);
-                g2d.drawRect(imageX+stroke-(stroke/2), imageY+stroke-(stroke/2), playerSize-stroke, playerSize-stroke);
-
+                g.drawImage(lebronImages[players.get(i).getLebron()], imageX, imageY, playerSize, playerSize, null);
+            }
+            for(int i = 0; i < numPlayers; ++i) {
+                int imageX = players.get(i).getX()-players.get(playerNum).getX()+width/2-playerSize/2;
+                int imageY = players.get(i).getY()-players.get(playerNum).getY()+height/2-playerSize/2;
+                Graphics2D g2d = (Graphics2D) g;
+                Font font = new Font("Arial", Font.BOLD, 30);
+                g2d.setFont(font);
+                g2d.setColor(Color.black);
+                g2d.drawString(players.get(i).getName(), (int)((double)(playerSize / 2) - (double) (g2d.getFontMetrics(font).stringWidth(players.get(i).getName()) / 2)) + imageX, imageY - 10);
                 obstacles.set(i, new Obstacle(players.get(i).getX(), players.get(i).getY(), players.get(i).getX()+ playerSize, players.get(i).getY() + playerSize, 0, 0));
             }
             for (int i = numPlayers; i < obstacles.size(); i++) {
@@ -210,10 +223,21 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 }
             }
         } else {
-            double colorWidth = (double)width * (double)0.5F;
-            double colorHeight = colorWidth / (double)colorsImages[color].getWidth(null) * (double)colorsImages[color].getHeight(null);
-            g.drawImage(colorsImages[color], (int)((double)(width / 2) - colorWidth / (double)2.0F), (int)((double)(height / 2) - colorHeight / (double)2.0F), (int)colorWidth, (int)colorHeight, null);
+            double colorWidth = (double) width * (double) 0.6F;
+            double colorHeight = colorWidth / (double) lebronSelectImages[lebronNum].getWidth(null) * (double) lebronSelectImages[lebronNum].getHeight(null);
+            g.drawImage(lebronSelectImages[lebronNum], (int) ((double) (width / 2) - colorWidth / (double) 2.0F), (int) ((double) (height / 2.75) - colorHeight / (double) 2.0F), (int) colorWidth, (int) colorHeight, null);
+            Graphics2D g2d = (Graphics2D) g;
+            Font font = new Font("Arial", Font.BOLD, width/25);
+            g2d.setFont(font);
+            g2d.drawString("Enter Name: " + name, (int) ((double) (width / 2) - (double) (g2d.getFontMetrics(font).stringWidth("Enter Name " + name) / 2)), (int) (height * 0.80));
+            g2d.setColor(Color.blue);
+            g2d.drawString("Press Enter to Start", (int) ((double) (width / 2) - (double) (g2d.getFontMetrics(font).stringWidth("Press Enter to Start") / 2)), (int) (height * 0.90));
         }
+//        } else {
+//            double editHeight = height;
+//            double editWidth = (editHeight / (double)lebronEdit.getHeight(null)) * (double)lebronEdit.getWidth(null);
+//            g.drawImage(lebronEdit, (int)((double)(width / 2) - editWidth / (double)2.0F), (int)((double)(height / 2) - editHeight / (double)2.0F), (int)editWidth, (int)editHeight, null);
+//        }
     }
 
     public void run() {
@@ -348,8 +372,12 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         players.get(player).setY(y);
     }
 
-    public void updateColor(int c, int player) {
-        players.get(player).setColor(c);
+    public void updateLebron(int c, int player) {
+        players.get(player).setLebron(c);
+    }
+
+    public void updateName(String s, int player) {
+        players.get(player).setName(s);
     }
 
     public void readyGame(int numPlayers, int playerNum) {
@@ -359,8 +387,8 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         finished = new boolean[numPlayers];
 
         for(int i = 0; i < numPlayers; ++i) {
-            int[] playerPosition = new int[]{i*(playerSize+5) - 1400, 200};
-            players.add(new Player(playerPosition, i + 1, 0));
+            int[] playerPosition = new int[]{i*(playerSize+5) - 1400, 250};
+            players.add(new Player(playerPosition, i + 1, 0, ""));
             obstacles.add(i, new Obstacle(players.get(i).getX(), players.get(i).getY(), players.get(i).getX()+ playerSize, players.get(i).getY() + playerSize, 0, 0));
         }
         //System.out.println("ready");
@@ -392,40 +420,51 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         if (e.getKeyCode() == 68 || e.getKeyCode() == 39) // D -> Right
             directions[3] = true;
 
-        //color select
+        //lebron select
         if (!start && ready) {
-            if (e.getKeyCode() == 39 || e.getKeyCode() == 68) {
-                if (color == 9)
-                    color = 0;
+            if (e.getKeyCode() == 39) { // || e.getKeyCode() == 68
+                if (lebronNum == 5)
+                    lebronNum = 0;
                 else
-                    color++;
+                    lebronNum++;
                 repaint();
-                client.send("color " + color + " " + playerNum);
-                players.get(playerNum).setColor(color);
+                client.send("lebron " + lebronNum + " " + playerNum);
+                players.get(playerNum).setLebron(lebronNum);
             }
 
-            if (e.getKeyCode() == 37 || e.getKeyCode() == 65) {
-                if (color == 0)
-                    color = 9;
+            if (e.getKeyCode() == 37) {  //|| e.getKeyCode() == 65
+                if (lebronNum == 0)
+                    lebronNum = 5;
                 else
-                    color--;
+                    lebronNum--;
                 repaint();
-                client.send("color " + color + " " + playerNum);
-                players.get(playerNum).setColor(color);
+                client.send("lebron " + lebronNum + " " + playerNum);
+                players.get(playerNum).setLebron(lebronNum);
             }
         }
 
         //game start
-        if (ready && e.getKeyCode() == 32) {
-            HashSet<Integer> colorSet = new HashSet<Integer>();
+        if (ready && e.getKeyCode() == 10) {
+            HashSet<Integer> lebronSet = new HashSet<Integer>();
             for(int i = 0; i < numPlayers; ++i)
-                colorSet.add((players.get(i)).getColor());
-            if (colorSet.size() == numPlayers) {
+                lebronSet.add((players.get(i)).getLebron());
+            if (lebronSet.size() == numPlayers) {
                 client.send("start");
                 start();
             }
         }
-}
+
+//        System.out.println(e.getKeyCode());
+        if(!start){
+            if(e.getKeyCode() == 8 && !name.isEmpty()) name = name.substring(0, name.length()-1);
+            if(e.getKeyCode() > 40 && e.getKeyCode() < 91 || e.getKeyCode() == 32)
+                name += e.getKeyChar();
+            repaint();
+            client.send("name " + name + " " + playerNum);
+            players.get(playerNum).setName(name);
+//            System.out.println(e.getKeyChar() + " " + name);
+        }
+    }
 
 
     public void keyReleased(KeyEvent e) {
@@ -437,10 +476,11 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             directions[3] = false;
     }
 
+    public void keyTyped(KeyEvent e) {}
     public void mouseClicked(MouseEvent e) {}
     public void mousePressed(MouseEvent e) {}
     public void mouseReleased(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
-    public void keyTyped(KeyEvent e) {}
+
 }

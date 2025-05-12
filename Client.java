@@ -44,8 +44,12 @@ public class Client extends Thread {
                     this.display.readyGame(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
                 }
 
-                if (tokens[0].equals("color")) {
-                    this.display.updateColor(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
+                if (tokens[0].equals("lebron")) {
+                    this.display.updateLebron(Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]));
+                }
+
+                if (tokens[0].equals("name") && tokens.length > 2) {
+                    this.display.updateName(tokens[1], Integer.parseInt(tokens[2]));
                 }
 
                 if (tokens[0].equals("start")) {

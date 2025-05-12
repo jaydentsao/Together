@@ -1,12 +1,14 @@
 public class Player {
     private int[] pos;
     private int num;
-    private int color;
+    private int lebron;
+    private String name;
 
-    public Player(int[] pos, int num, int color) {
+    public Player(int[] pos, int num, int lebron, String name) {
         this.pos = pos;
         this.num = num;
-        this.color = color;
+        this.lebron = lebron;
+        this.name = name;
     }
 
     public void setX(int x) {
@@ -25,11 +27,15 @@ public class Player {
         return this.pos[1];
     }
 
-    public void setColor(int c) {
-        this.color = c;
+    public void setLebron(int c) {
+        this.lebron = c;
     }
 
-    public int getColor() {
-        return this.color;
+    public int getLebron() {
+        return this.lebron;
     }
+
+    public void setName(String n) {this.name = n;}
+
+    public String getName() {return this.name;}
 }
