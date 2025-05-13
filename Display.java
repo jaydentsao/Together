@@ -162,19 +162,21 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         //JFX
         JFXPanel fxPanel = new JFXPanel();
         frame.add(fxPanel);
-        File file = new File("misc/lebronKawaii.mp4"); 
-        Media media = new Media(file.toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        MediaView mediaView = new MediaView(mediaPlayer);
-        StackPane root = new StackPane();
-        root.getChildren().add(mediaView);
-        mediaView.fitWidthProperty().bind(root.widthProperty());
-        mediaView.fitHeightProperty().bind(root.heightProperty());
-        mediaView.setPreserveRatio(true);
-        Scene scene = new Scene(root);
-        fxPanel.setScene(scene);
-        mediaPlayer.play();
-        
+        Platform.runLater(() -> {
+                System.out.print("jfx");
+                File file = new File("misc/lebronKawaii.mp4"); 
+                Media media = new Media(file.toURI().toString());
+                MediaPlayer mediaPlayer = new MediaPlayer(media);
+                MediaView mediaView = new MediaView(mediaPlayer);
+                StackPane root = new StackPane();
+                root.getChildren().add(mediaView);
+                mediaView.fitWidthProperty().bind(root.widthProperty());
+                mediaView.fitHeightProperty().bind(root.heightProperty());
+                mediaView.setPreserveRatio(true);
+                Scene scene = new Scene(root);
+                fxPanel.setScene(scene);
+                mediaPlayer.play();
+        });
 
         run();
     }
