@@ -1,9 +1,19 @@
 import javax.swing.*;
+
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.net.URL;
 import java.util.*;
 
@@ -162,6 +172,24 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         addMouseListener(this); // will notify Display when the mouse is pressed
         client = new Client(ip, this);
         run();
+
+        //JFX
+        JFXPanel fxPanel = new JFXPanel();
+        frame.add(fxPanel);
+        Platform.runLater(() -> {
+                File file = new File("your_video.mp4"); 
+                Media media = new Media(file.toURI().toString());
+                MediaPlayer mediaPlayer = new MediaPlayer(media);
+                MediaView mediaView = new MediaView(mediaPlayer);
+                StackPane root = new StackPane();
+                root.getChildren().add(mediaView);
+                mediaView.fitWidthProperty().bind(root.widthProperty());
+                mediaView.fitHeightProperty().bind(root.heightProperty());
+                mediaView.setPreserveRatio(true);
+                Scene scene = new Scene(root);
+                fxPanel.setScene(scene);
+                mediaPlayer.play();
+        });
     }
 
     public void paintComponent(Graphics g) {

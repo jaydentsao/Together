@@ -8,7 +8,6 @@ public class  Main
         joinGame("localhost");
 //        joinGame("localhost");
 //        joinGame("localhost");
-//        joinGame("localhost");
         //joinGame("localhost");
 //        joinGame("169.254.253.11");
 
