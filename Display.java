@@ -44,7 +44,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     Client client;
     boolean start;
     boolean ready;
-    boolean editPlaying;
+    boolean videoDone;
     int numPlayers;
     int playerNum;
     int lebronNum;
@@ -150,7 +150,6 @@ public class Display extends JComponent implements KeyListener, MouseListener {
 
         start = false;
         ready = false;
-        editPlaying = true;
 
         timeBefore = System.currentTimeMillis();
 
@@ -177,7 +176,8 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         JFXPanel fxPanel = new JFXPanel();
         frame.add(fxPanel);
         Platform.runLater(() -> {
-                File file = new File("your_video.mp4"); 
+
+                File file = new File("misc/lebronKawaii.mp4"); 
                 Media media = new Media(file.toURI().toString());
                 MediaPlayer mediaPlayer = new MediaPlayer(media);
                 MediaView mediaView = new MediaView(mediaPlayer);
@@ -189,12 +189,23 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 Scene scene = new Scene(root);
                 fxPanel.setScene(scene);
                 mediaPlayer.play();
+                mediaPlayer.setOnEndOfMedia(() ->{
+                    frame.remove(fxPanel);
+                    videoDone=true;
+                    repaint();
+                });
         });
+
+        run();
     }
 
     public void paintComponent(Graphics g) {
+
+        if(start&&videoDone)
         if (start) {
             g.drawImage(levelImages[level], players.get(playerNum).getX()*-1 - levelImages[level].getWidth(null)/2 + width/2, (players.get(playerNum)).getY()*-1 - levelImages[level].getHeight(null)/2 + height/2, null);
+
+        if (start&&videoDone) {
             for (int i = 0; i < numPlayers - 1; i++) {
                 int centerX = players.get(i).getX() + playerSize / 2;
                 int centerY = players.get(i).getY() + playerSize / 2;
@@ -266,6 +277,17 @@ public class Display extends JComponent implements KeyListener, MouseListener {
 //            double editWidth = (editHeight / (double)lebronEdit.getHeight(null)) * (double)lebronEdit.getWidth(null);
 //            g.drawImage(lebronEdit, (int)((double)(width / 2) - editWidth / (double)2.0F), (int)((double)(height / 2) - editHeight / (double)2.0F), (int)editWidth, (int)editHeight, null);
 //        }
+        } else if(videoDone){
+            double colorWidth = (double) width * (double) 0.6F;
+            double colorHeight = colorWidth / (double) lebronSelectImages[lebronNum].getWidth(null) * (double) lebronSelectImages[lebronNum].getHeight(null);
+            g.drawImage(lebronSelectImages[lebronNum], (int) ((double) (width / 2) - colorWidth / (double) 2.0F), (int) ((double) (height / 2.75) - colorHeight / (double) 2.0F), (int) colorWidth, (int) colorHeight, null);
+            Graphics2D g2d = (Graphics2D) g;
+            Font font = new Font("Arial", Font.BOLD, width/25);
+            g2d.setFont(font);
+            g2d.drawString("Enter Name: " + name, (int) ((double) (width / 2) - (double) (g2d.getFontMetrics(font).stringWidth("Enter Name " + name) / 2)), (int) (height * 0.80));
+            g2d.setColor(Color.blue);
+            g2d.drawString("Press Enter to Start", (int) ((double) (width / 2) - (double) (g2d.getFontMetrics(font).stringWidth("Press Enter to Start") / 2)), (int) (height * 0.90));;
+        }
     }
 
     public void run() {
