@@ -164,7 +164,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         JFXPanel fxPanel = new JFXPanel();
         frame.add(fxPanel);
         Platform.runLater(() -> {
-                System.out.print("jfx");
+
                 File file = new File("misc/lebronKawaii.mp4"); 
                 Media media = new Media(file.toURI().toString());
                 MediaPlayer mediaPlayer = new MediaPlayer(media);
