@@ -43,6 +43,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     Client client;
     boolean start;
     boolean ready;
+    boolean videoDone;
     int numPlayers;
     int playerNum;
     int color;
@@ -176,6 +177,11 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 Scene scene = new Scene(root);
                 fxPanel.setScene(scene);
                 mediaPlayer.play();
+                mediaPlayer.setOnEndOfMedia(() ->{
+                    frame.remove(fxPanel);
+                    videoDone=true;
+                    repaint();
+                });
         });
 
         run();
@@ -183,10 +189,10 @@ public class Display extends JComponent implements KeyListener, MouseListener {
 
     public void paintComponent(Graphics g) {
 
-        if(start)
+        if(start&&videoDone)
             g.drawImage(levelImages[level], players.get(playerNum).getX()*-1 - levelImages[level].getWidth(null)/2 + width/2, (players.get(playerNum)).getY()*-1 - levelImages[level].getHeight(null)/2 + height/2, null);
 
-        if (start) {
+        if (start&&videoDone) {
             for (int i = 0; i < numPlayers - 1; i++) {
                 int centerX = players.get(i).getX() + playerSize / 2;
                 int centerY = players.get(i).getY() + playerSize / 2;
@@ -240,7 +246,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                     g2d.fillRect(coords[0]-players.get(playerNum).getX()+width/2-playerSize/2, coords[1]-players.get(playerNum).getY()+height/2-playerSize/2, coords[2]-coords[0], coords[3]-coords[1]);
                 }
             }
-        } else {
+        } else if(videoDone){
             double colorWidth = (double)width * (double)0.5F;
             double colorHeight = colorWidth / (double)colorsImages[color].getWidth(null) * (double)colorsImages[color].getHeight(null);
             g.drawImage(colorsImages[color], (int)((double)(width / 2) - colorWidth / (double)2.0F), (int)((double)(height / 2) - colorHeight / (double)2.0F), (int)colorWidth, (int)colorHeight, null);
