@@ -170,13 +170,11 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         // Mouse
         addMouseListener(this); // will notify Display when the mouse is pressed
         client = new Client(ip, this);
-        run();
 
         //JFX
         JFXPanel fxPanel = new JFXPanel();
         frame.add(fxPanel);
         Platform.runLater(() -> {
-
                 File file = new File("misc/lebronKawaii.mp4"); 
                 Media media = new Media(file.toURI().toString());
                 MediaPlayer mediaPlayer = new MediaPlayer(media);
