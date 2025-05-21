@@ -44,7 +44,12 @@ public class Client extends Thread {
                 }
 
                 if (tokens[0].equals("name") && tokens.length > 2) {
-                    this.display.updateName(tokens[1], Integer.parseInt(tokens[2]));
+                    String name = "";
+                    for(int i = 1; i < tokens.length-1; i++){
+                        name += tokens[i];
+                        if(i != tokens.length-2) name += " ";
+                    }
+                    this.display.updateName(name, Integer.parseInt(tokens[tokens.length-1]));
                 }
 
                 if (tokens[0].equals("start")) {
@@ -53,6 +58,10 @@ public class Client extends Thread {
 
                 if(tokens[0].equals("died")) {
                     this.display.died();
+                }
+                
+                if(tokens[0].equals("reset")) {
+                    this.display.reset();
                 }
 
                 if(tokens[0].equals("complete")) {

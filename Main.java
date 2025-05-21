@@ -6,6 +6,7 @@ public class  Main
         hostGame(2);
         joinGame("localhost");
         joinGame("localhost");
+        //joinGame("localhost");
 //        joinGame("localhost");
 //        joinGame("localhost");
         //joinGame("localhost");
