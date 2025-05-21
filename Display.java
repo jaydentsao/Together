@@ -22,7 +22,6 @@ import java.util.*;
 
 
 public class Display extends JComponent implements KeyListener, MouseListener {
-    private final Image grid;
     private final Image lebronEdit;
     private final Image[] lebronSelectImages;
     private final Image[] levelImages;
@@ -61,6 +60,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
 
     private String name;
     JFXPanel fxPanel;
+    boolean selectRepaint;
 
 
     public Display(String ip) {
@@ -73,12 +73,6 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             }
             lebronImages[i] = new ImageIcon(url1).getImage();
         }
-
-        String gridName = "graph.jpg";
-        URL url2 = getClass().getResource(gridName);
-        if (url2 == null)
-            throw new RuntimeException("Unable to load:  " + gridName);
-        grid = new ImageIcon(url2).getImage();
 
         lebronSelectImages = new Image[6];
         for(int i = 0; i < 6; ++i) {
@@ -106,8 +100,6 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         lebronEdit = new ImageIcon(url5).getImage();
 
         obstacles = new ArrayList<>();
-//        obstacles.add(new Obstacle(-500, 860, 1600, 960, true));
-//        obstacles.add(new Obstacle(0, 700, 1600, 750, true));
 
         obstacles.add(new Obstacle(-1463, -463, -1413, 637, 0, 0));
         obstacles.add(new Obstacle(-1413, 487, -913, 637, 0, 0));
@@ -173,25 +165,6 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         obstacles.add(new Obstacle(423, 487, 623, 537, 0, 5));
         obstacles.add(new Obstacle(623, 487, 673, 537, 2, 5));
         obstacles.add(new Obstacle(673, 487, 823, 537, 0, 5));
-        
-        
-        // for(int i=0;i<numLevels;i++){
-            // try{
-                // BufferedImage loader=ImageIO.read(new File("Levels/level"+i+".png"));
-                // for(int j=0;j<loader.getWidth();j++){
-                    // for(int k=0;k<loader.getHeight();k++){
-                        // int argb=loader.getRGB(j,k);
-                        // int r=argb & 0xff;
-                        // int g=(argb & 0xff00) >> 8;
-                        // int b=(argb & 0xff0000) >> 16;
-                        // if(r==0&&g==0&&b==0){obstacles.add(new Obstacle(j,k,j+1,k+1,0,i));}
-                        // if(r==255&&g==0&&b==0){obstacles.add(new Obstacle(j,k,j+1,k+1,2,i));}
-                        // if(r==0&&g==255&&b==0){obstacles.add(new Obstacle(j,k,j+1,k+1,2,i));}
-                    // }
-                // }
-            // } catch(Exception e) {}
-        // }
-
 
         frame = new JFrame(); // create window
         frame.setTitle("LeGether"); // set title of window
@@ -235,6 +208,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         addMouseListener(this); // will notify Display when the mouse is pressed
         client = new Client(ip, this);
 
+        selectRepaint = true;
         //JFX
         fxPanel = new JFXPanel();
         frame.add(fxPanel);
@@ -322,12 +296,11 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             g2d.setColor(Color.YELLOW);
             if(videoDone)g2d.drawString("Press Enter to Start", (int) ((double) (width / 2) - (double) (g2d.getFontMetrics(font).stringWidth("Press Enter to Start") / 2)), (int) (height * 0.90));
             else g2d.drawString("Press Enter to Start", (int) ((double) (width / 2) - (double) (g2d.getFontMetrics(font).stringWidth("Press Enter to Start") / 2)), 999999999);
+            if(selectRepaint) {
+                repaint();
+                selectRepaint = false;
+            }
         }
-//        } else {
-//            double editHeight = height;
-//            double editWidth = (editHeight / (double)lebronEdit.getHeight(null)) * (double)lebronEdit.getWidth(null);
-//            g.drawImage(lebronEdit, (int)((double)(width / 2) - editWidth / (double)2.0F), (int)((double)(height / 2) - editHeight / (double)2.0F), (int)editWidth, (int)editHeight, null);
-//        }
     }
 
     public void run() {
@@ -338,9 +311,6 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             height = size.height;
             if (start && timePassed > 17) {
                 timeBefore = System.currentTimeMillis();
-                //System.out.println(timePassed);
-
-
                 allowMove = new boolean[]{false, true, true, true};
                 // Player-Obstacle Collisions
                 boolean onObstacle = false;
@@ -430,7 +400,6 @@ public class Display extends JComponent implements KeyListener, MouseListener {
 
                 repaint();
                 client.send("pos " + (players.get(playerNum)).getX() + " " + (players.get(playerNum)).getY() + " " + playerNum);
-
             }
             try { Thread.sleep(1); }
             catch (Exception e) { }
@@ -483,13 +452,11 @@ public class Display extends JComponent implements KeyListener, MouseListener {
         this.numPlayers = numPlayers;
         this.playerNum = playerNum;
         finished = new boolean[numPlayers];
-
         for(int i = 0; i < numPlayers; ++i) {
             int[] playerPosition = new int[]{i*(playerSize+5) - 1400, 250};
             players.add(new Player(playerPosition, i + 1, 0, ""));
             obstacles.add(i, new Obstacle(players.get(i).getX(), players.get(i).getY(), players.get(i).getX()+ playerSize, players.get(i).getY() + playerSize, 0, 0));
         }
-        //System.out.println("ready");
     }
 
     public void died(){
@@ -532,16 +499,16 @@ public class Display extends JComponent implements KeyListener, MouseListener {
                 mediaPlayer.play();
                 mediaPlayer.setOnEndOfMedia(() ->{
                     Platform.runLater(() -> fxPanel.setScene(null));
-                    //frame.remove(fxPanel);
                     videoDone=true;
                     frame.getContentPane().setBackground(new Color(130, 0, 200));
+                    selectRepaint = true;
                     repaint();
                 });
         });
     }
 
     public void keyPressed(KeyEvent e) {
-//         System.out.println(e.getKeyCode());
+        //System.out.println(e.getKeyCode());
         //movement
         if (e.getKeyCode() == 87 || e.getKeyCode() == 38) // W -> Up
             directions[0] = true;
@@ -584,7 +551,6 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             }
         }
 
-//        System.out.println(e.getKeyCode());
         if(!start && videoDone){
             if(e.getKeyCode() == 8 && !name.isEmpty()) name = name.substring(0, name.length()-1);
             if(e.getKeyCode() > 40 && e.getKeyCode() < 91 || e.getKeyCode() == 32)
@@ -592,7 +558,6 @@ public class Display extends JComponent implements KeyListener, MouseListener {
             repaint();
             client.send("name " + name + " " + playerNum);
             players.get(playerNum).setName(name);
-//            System.out.println(e.getKeyChar() + " " + name);
         }
         
         if (e.getKeyCode() == 27 && videoDone){ //reset
