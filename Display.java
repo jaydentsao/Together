@@ -517,9 +517,7 @@ public class Display extends JComponent implements KeyListener, MouseListener {
     }
     
     public void playVideo(){
-        System.out.println("video");
         Platform.runLater(() -> {
-                System.out.println("playing");
                 File file = new File("misc/lebronKawaii.mp4"); 
                 Media media = new Media(file.toURI().toString());
                 MediaPlayer mediaPlayer = new MediaPlayer(media);
